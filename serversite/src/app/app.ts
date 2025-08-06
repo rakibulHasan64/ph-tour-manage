@@ -1,7 +1,6 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import cors from 'cors'
-
-
+import { router } from "./routes";
 
 
 
@@ -14,6 +13,16 @@ app.use(cors({
   origin: "http://localhost:5173"  
 }))
 
+
+app.use("/api/v1", router)
+
+
+
+
+
+// app.use((err: any, req:Request, res:Response, next: NextFunction) => {
+  
+// })
 
 
 
