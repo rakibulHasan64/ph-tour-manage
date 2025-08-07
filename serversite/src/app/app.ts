@@ -1,6 +1,8 @@
-import express, { Application, NextFunction, Request, Response } from "express";
+
+import express, { Application, Request, Response } from "express";
 import cors from 'cors'
 import { router } from "./routes";
+import { globalErrorHandler } from "./middlewares/globalErrohandler";
 
 
 
@@ -20,15 +22,25 @@ app.use("/api/v1", router)
 
 
 
-// app.use((err: any, req:Request, res:Response, next: NextFunction) => {
-  
-// })
+
 
 
 
 
 app.get('/', (req: Request, res: Response) => {
    res.send("Welcome to Note App");
+});
+
+
+
+
+app.use(globalErrorHandler)
+
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
 });
 
 
