@@ -3,7 +3,8 @@ import { IUser } from "../user/user.interface";
 import httpStatus from "http-status-codes";
 import { User } from "../user/user.module";
 import bcrypt from "bcryptjs";
-import jwt from 'jsonwebtoken';
+import { envVars } from "../../config/env";
+import { generateToken } from "../../utils/jwt";
 
 const credentialsLogin = async (payload: Partial<IUser>) => {
 
@@ -25,15 +26,12 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
    }
 
    const jwtPayload = {
-      userIs: isUserExist._id,
+      userId: isUserExist._id,
       email: isUserExist.email,
       role: isUserExist.role
    }
 
-   const accessToken = jwt.sign(jwtPayload, "secret", {
-      expiresIn: "1d"
-   })
-
+   const accessToken = generateToken(jwtPayload, envVars.JWT_ACCESS_SECRET, envVars.JWT_ACCESS_EXPIRES)
    return {
       accessToken
    }

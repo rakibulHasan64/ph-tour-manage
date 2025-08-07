@@ -5,6 +5,7 @@ import { Server } from "http";
 import mongoose from "mongoose";
 import app from "./app";
 import { envVars } from "./config/env";
+import { seedSuPerAdmin } from "./utils/seer.superAdmin";
 
 let server: Server;
 
@@ -26,7 +27,12 @@ const startServer = async () => {
    }
 };
 
-startServer();
+(async () => {
+  await startServer();
+  await seedSuPerAdmin();
+})();
+
+
 
 process.on("SIGTERM", () => {
    console.log("SIGTERM received. Shutting down gracefully...");

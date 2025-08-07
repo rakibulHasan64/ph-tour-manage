@@ -14,7 +14,7 @@ import { AuthService } from "./auth.service";
   const loginInfo = await AuthService.credentialsLogin(req.body);
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: "User login successfully",
     data: loginInfo,
 
