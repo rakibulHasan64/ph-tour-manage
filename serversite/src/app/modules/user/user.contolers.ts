@@ -5,9 +5,6 @@ import httpStatus from "http-status-codes";
 import { UserServies } from "./user.service";
 import { catchAsync } from "../../utils/catchAsyn";
 import { sendResponse } from "../../utils/sendRespons";
-import { verifyToken } from "../../utils/jwt";
-import { envVars } from "../../config/env";
-import { JwtPayload } from "jsonwebtoken";
 
 
 
@@ -78,3 +75,4 @@ export const userControllers = {
   getAllUsers,
   UpdeaedUser
 }
+

@@ -1,10 +1,15 @@
+
 import AppError from "../../errorHelpers/AppError";
-import { IUser } from "../user/user.interface";
+import {  IUser } from "../user/user.interface";
 import httpStatus from "http-status-codes";
 import { User } from "../user/user.module";
 import bcrypt from "bcryptjs";
+
+import { createNewAccessTokenWithRefresToken, creatUserTokens } from "../../utils/userTokens";
+import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../../config/env";
-import { generateToken } from "../../utils/jwt";
+
+
 
 const credentialsLogin = async (payload: Partial<IUser>) => {
 
@@ -25,21 +30,110 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
          
    }
 
-   const jwtPayload = {
-      userId: isUserExist._id,
-      email: isUserExist.email,
-      role: isUserExist.role
-   }
+   // const jwtPayload = {
+   //    userId: isUserExist._id,
+   //    email: isUserExist.email,
+   //    role: isUserExist.role
+   // }
 
-   const accessToken = generateToken(jwtPayload, envVars.JWT_ACCESS_SECRET, envVars.JWT_ACCESS_EXPIRES)
+   // const accessToken = generateToken(jwtPayload, envVars.JWT_ACCESS_SECRET, envVars.JWT_ACCESS_EXPIRES)
+
+   // const refreshToken = generateToken(jwtPayload, envVars.JWT_REFRESH_SECRET, envVars.JWT_REFRESH_EXPIRES)
+   
+    const userTokens=creatUserTokens(isUserExist)
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   const {password: pass, ...rest}=isUserExist.toObject()
    return {
-      accessToken
+      accessToken: userTokens.accessToken,
+      refreshToken: userTokens.refreshToken,
+      user: rest
    }
    
 
    
 }
 
+
+
+
+
+const getNewAccessToken= async (refreshToken: string) => {
+   const newAccessToken=await createNewAccessTokenWithRefresToken(refreshToken)
+
+
+
+   return {
+      accessToken : newAccessToken
+   }
+}
+
+
+
+// const resetPassword = async (oldPassword: string, newPassword: string, decodedToken: JwtPayload) => {
+   
+//    const user=await User.findById(decodedToken.userId)
+   
+
+//    const isOldPasswordMatch = await bcrypt.compare(oldPassword, user!.password as string)
+   
+
+//    if (!isOldPasswordMatch) {
+//          throw new AppError(httpStatus.BAD_REQUEST,"old Password does not match")
+         
+//    }
+
+//    user!.password = await bcrypt.hash(newPassword, Number(envVars.BCRYPT_SALT_ROUND))
+   
+//    user!.save();
+   
+
+
+   
+const resetPassword = async (
+  oldPassword: string,
+  newPassword: string,
+  decodedToken: JwtPayload
+) => {
+  const user = await User.findById(decodedToken.userId);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const isOldPasswordMatch = await bcrypt.compare(
+    oldPassword,
+    user.password as string
+  );
+
+  if (!isOldPasswordMatch) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Old password does not match");
+  }
+
+  if (!newPassword) {
+    throw new AppError(httpStatus.BAD_REQUEST, "New password is required");
+  }
+
+  const saltRound = Number(envVars.BCRYPT_SALT_ROUND);
+  if (!saltRound || isNaN(saltRound)) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Invalid BCRYPT_SALT_ROUND value"
+    );
+  }
+
+  user.password = await bcrypt.hash(newPassword, saltRound);
+
+  await user.save(); // অবশ্যই await দিতে হবে
+
+  return true;
+};
+
+
+
+
+
 export const AuthService = {
-   credentialsLogin
+   credentialsLogin,
+   getNewAccessToken,
+   resetPassword
 }
