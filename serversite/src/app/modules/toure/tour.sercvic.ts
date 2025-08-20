@@ -51,7 +51,7 @@ const getAllTours = async (query: Record<string, string>) => {
         data,
         mata
     }
-
+     
 
 
 
