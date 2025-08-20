@@ -63,16 +63,16 @@ const updateDivision = async (id: string, payload: Partial<IDivision>) => {
       _id: { $ne: id },
    });
 
-   if (payload.name) {
-      const baseslug = payload.name.toLowerCase().split(" ").join("-");
-      let slug = `${baseslug}-division`
-      let counter = 0;
-      while (await Division.exists({ slug })) {
-       slug=`${slug}-${counter++}`
-      }
+   // if (payload.name) {
+   //    const baseslug = payload.name.toLowerCase().split(" ").join("-");
+   //    let slug = `${baseslug}-division`
+   //    let counter = 0;
+   //    while (await Division.exists({ slug })) {
+   //     slug=`${slug}-${counter++}`
+   //    }
 
-     payload.slug = slug;
-   }
+   //   payload.slug = slug;
+   // }
 
 
    if (duplicateDivision) {

@@ -32,24 +32,26 @@ divisionScehma.pre("save", async function (next) {
 
 
 divisionScehma.pre("findOneAndUpdate", async function (next) {
+   const update = this.getUpdate() as Partial<IDivision>;
 
-   const bivision=this.get
-   
-   
-      const baseslug = this.name.toLowerCase().split(" ").join("-");
-      let slug = `${baseslug}-division`
-       let counter = 0;
+   if (update.name) {
+      const baseslug = update.name.toLowerCase().split(" ").join("-");
+      let slug = `${baseslug}-division`;
+      let counter = 0;
+
       while (await Division.exists({ slug })) {
-        slug=`${slug}-${counter++}`
+        slug = `${slug}-${counter++}`;
       }
 
-      this.slug = slug;
-   
- 
+      // set the new slug in the update object
+      this.setUpdate({
+        ...update,
+        slug: slug
+      });
+   }
 
-
-   next()
-})
+   next();
+});
 
 
 export const Division=model<IDivision>("Division", divisionScehma)
