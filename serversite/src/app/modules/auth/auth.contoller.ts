@@ -11,24 +11,39 @@ import { setAuthcookie } from "../../utils/setCookie";
 import { creatUserTokens } from "../../utils/userTokens";
 import { envVars } from "../../config/env";
 import { JwtPayload } from "jsonwebtoken";
+import passport from "passport";
 
 
 
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 const credentialsLogin = catchAsync(async (req: Request, res: Response, next: NextFunction)=> {
-  const loginInfo = await AuthService.credentialsLogin(req.body);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  passport.authenticate("local", async (err: any, user: any, info: any) => {
+     if (err) {
+       return next(new AppError(401, err));
+     }
 
-   setAuthcookie(res,loginInfo)
+     if (!user) {
+       return next(new AppError(401, info.message));
+     }
 
-  
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "User login successfully",
-    data: loginInfo,
+     const userToken = await creatUserTokens(user);
+     const { password: pass, ...rest } = user.toObject();
 
-  })
+     setAuthcookie(res, userToken);
+
+     sendResponse(res, {
+       success: true,
+       statusCode: httpStatus.OK,
+       message: "User login successfully",
+       data: {
+         accessToken: userToken.accessToken,
+         refreshTokens: userToken.refreshToken,
+         user: rest,
+       },
+     });
+  })(req, res, next); // ✅ Correct order
 });
 
 
