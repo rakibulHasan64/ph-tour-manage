@@ -8,8 +8,6 @@ import { User } from "../modules/user/user.module";
 import { IsActive, Role } from "../modules/user/user.interface";
 import {Strategy as LocalStrategy} from "passport-local"
 import bcrypt from "bcryptjs";
-import httpStatus from "http-status-codes";
-import AppError from "../errorHelpers/AppError";
 
 passport.use(
    new LocalStrategy({
@@ -29,7 +27,7 @@ passport.use(
 
          if (!isUserExist.isVerified) {
        
-         done("User is not verified")
+          return  done("User is not verified")
         }
 
          if (isUserExist.isActive === IsActive.BLOCKED || isUserExist.isActive === IsActive.INACTIVE) {
@@ -41,7 +39,7 @@ passport.use(
 
        if (isUserExist.isDeleted) {
       
-         done("User is deleted")
+         return done("User is deleted")
        }
     
       
@@ -90,10 +88,27 @@ passport.use(
                return done(null,false,{mesaage: "No email found"})
             }
 
-            let user = await User.findOne({ email })
+            let isUserExist = await User.findOne({ email })
+
+         if (isUserExist && !isUserExist.isVerified) {
+                    // throw new AppError(httpStatus.BAD_REQUEST, "User is not verified")
+                    // done("User is not verified")
+                    return done(null, false, { message: "User is not verified" })
+                }
+
+                if (isUserExist && (isUserExist.isActive === IsActive.BLOCKED || isUserExist.isActive === IsActive.INACTIVE)) {
+                    // throw new AppError(httpStatus.BAD_REQUEST, `User is ${isUserExist.isActive}`)
+                    done(`User is ${isUserExist.isActive}`)
+                }
+
+                if (isUserExist && isUserExist.isDeleted) {
+                    return done(null, false, { message: "User is deleted" })
+                    // done("User is deleted")
+                }
+
             
-            if (!user) {
-               user = await User.create({
+            if (! isUserExist) {
+                isUserExist = await User.create({
                   email,
                   name: profile.displayName,
                   picture: profile.photos?.[0].value,
@@ -101,6 +116,7 @@ passport.use(
                   isVerified: true,
                   auths: [
                      {
+                         
                         provider: "google",
                         providerId: profile.id
                      }
@@ -109,7 +125,7 @@ passport.use(
                })
             }
 
-            return done(null,user)
+            return done(null, isUserExist)
             
          } catch (error) {
       

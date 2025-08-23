@@ -21,7 +21,7 @@ const credentialsLogin = catchAsync(async (req: Request, res: Response, next: Ne
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   passport.authenticate("local", async (err: any, user: any, info: any) => {
      if (err) {
-       return next(new AppError(401, err));
+       return next(new AppError(err.statusCode || 401, err.message));
      }
 
      if (!user) {
@@ -29,6 +29,7 @@ const credentialsLogin = catchAsync(async (req: Request, res: Response, next: Ne
      }
 
      const userToken = await creatUserTokens(user);
+     // eslint-disable-next-line @typescript-eslint/no-unused-vars
      const { password: pass, ...rest } = user.toObject();
 
      setAuthcookie(res, userToken);
@@ -123,16 +124,11 @@ const resetPassword = catchAsync(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async (req: Request, res: Response, next: NextFunction) => {
     const decodedToken = req.user;
-    const { oldPassword, newPassword } = req.body; // ✅ destructure
+    
 
-    if (!oldPassword || !newPassword) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        "Old password and new password are required"
-      );
-    }
+    
 
-    await AuthService.resetPassword(oldPassword, newPassword, decodedToken as JwtPayload);
+    await AuthService.resetPassword( req.body, decodedToken as JwtPayload);
 
     sendResponse(res, {
       success: true,
@@ -189,6 +185,23 @@ const setPassword = catchAsync(
 
 
 
+const forgotPassword = catchAsync(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async (req: Request, res: Response, next: NextFunction) => {
+    
+    const {email}=req.body
+
+    await AuthService.forgotPassword(email);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Email sent successfully",
+      data: null,
+    });
+  }
+);
+
 
 const  googleCallbackContolar = catchAsync(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -217,6 +230,7 @@ export const AuthController = {
   getNewAccessToken,
   logout,
   resetPassword,
+  forgotPassword,
   setPassword,
   changePassword,
   googleCallbackContolar

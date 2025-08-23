@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import AppError from "../../errorHelpers/AppError";
-import {  IAuthProvider, IUser } from "../user/user.interface";
+import {  IAuthProvider, IsActive, IUser } from "../user/user.interface";
 import httpStatus from "http-status-codes";
 import { User } from "../user/user.module";
-import bcrypt from "bcryptjs";
-
+import  Jwt  from "jsonwebtoken";
 import { createNewAccessTokenWithRefresToken, creatUserTokens } from "../../utils/userTokens";
+import bcryptjs from "bcryptjs";
 import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../../config/env";
+import { sendEmail } from "../../utils/sendEmail";
 
 
 
@@ -70,65 +71,67 @@ const getNewAccessToken= async (refreshToken: string) => {
 
 
 
-// const resetPassword = async (oldPassword: string, newPassword: string, decodedToken: JwtPayload) => {
-   
-//    const user=await User.findById(decodedToken.userId)
-   
-
-//    const isOldPasswordMatch = await bcrypt.compare(oldPassword, user!.password as string)
-   
-
-//    if (!isOldPasswordMatch) {
-//          throw new AppError(httpStatus.BAD_REQUEST,"old Password does not match")
-         
-//    }
-
-//    user!.password = await bcrypt.hash(newPassword, Number(envVars.BCRYPT_SALT_ROUND))
-   
-//    user!.save();
-   
-
 
    
-const resetPassword = async (
-  oldPassword: string,
-  newPassword: string,
-  decodedToken: JwtPayload
-) => {
-  const user = await User.findById(decodedToken.userId);
+// const resetPassword = async (
+//   oldPassword: string,
+//   newPassword: string,
+//   decodedToken: JwtPayload
+// ) => {
+//   const user = await User.findById(decodedToken.userId);
 
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
-  }
+//   if (!user) {
+//     throw new AppError(httpStatus.NOT_FOUND, "User not found");
+//   }
 
-  const isOldPasswordMatch = await bcrypt.compare(
-    oldPassword,
-    user.password as string
-  );
+//   const isOldPasswordMatch = await bcrypt.compare(
+//     oldPassword,
+//     user.password as string
+//   );
 
-  if (!isOldPasswordMatch) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Old password does not match");
-  }
+//   if (!isOldPasswordMatch) {
+//     throw new AppError(httpStatus.BAD_REQUEST, "Old password does not match");
+//   }
 
-  if (!newPassword) {
-    throw new AppError(httpStatus.BAD_REQUEST, "New password is required");
-  }
+//   if (!newPassword) {
+//     throw new AppError(httpStatus.BAD_REQUEST, "New password is required");
+//   }
 
-  const saltRound = Number(envVars.BCRYPT_SALT_ROUND);
-  if (!saltRound || isNaN(saltRound)) {
-    throw new AppError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      "Invalid BCRYPT_SALT_ROUND value"
-    );
-  }
+//   const saltRound = Number(envVars.BCRYPT_SALT_ROUND);
+//   if (!saltRound || isNaN(saltRound)) {
+//     throw new AppError(
+//       httpStatus.INTERNAL_SERVER_ERROR,
+//       "Invalid BCRYPT_SALT_ROUND value"
+//     );
+//   }
 
-  user.password = await bcrypt.hash(newPassword, saltRound);
+//   user.password = await bcrypt.hash(newPassword, saltRound);
 
-  await user.save(); // অবশ্যই await দিতে হবে
+//   await user.save(); // অবশ্যই await দিতে হবে
 
-  return true;
-};
+//   return true;
+// };
 
+   
+const resetPassword = async (payload: Record<string, string>, decodedToken: JwtPayload) => {
+    if (payload.id != decodedToken.userId) {
+        throw new AppError(401, "You can not reset your password")
+    }
+
+    const isUserExist = await User.findById(decodedToken.userId)
+    if (!isUserExist) {
+        throw new AppError(401, "User does not exist")
+    }
+
+    const hashedPassword = await bcryptjs.hash(
+        payload.newPassword,
+        Number(envVars.BCRYPT_SALT_ROUND)
+    )
+
+    isUserExist.password = hashedPassword;
+
+    await isUserExist.save()
+}
 
    
 const setPassword = async (userId: string, plainPassword: string) => {
@@ -142,7 +145,7 @@ const setPassword = async (userId: string, plainPassword: string) => {
      throw new AppError(httpStatus.BAD_REQUEST,"Password is already set. Use change password instead")
   }
 
-  const hasPassword=await bcrypt.hash(plainPassword,Number(envVars.BCRYPT_SALT_ROUND))
+  const hasPassword=await bcryptjs.hash(plainPassword,Number(envVars.BCRYPT_SALT_ROUND))
 
   const credentialProvider: IAuthProvider = {
     provider: "credentials",
@@ -164,6 +167,61 @@ const setPassword = async (userId: string, plainPassword: string) => {
   return true;
 };
 
+const forgotPassword = async (email: string) => {
+
+  const isUserExist = await User.findOne({ email });
+
+  
+     
+     if (!isUserExist) {
+        throw new AppError(httpStatus.BAD_REQUEST,"User does not exist")
+           
+        }
+        
+           if (!isUserExist.isVerified) {
+          throw new AppError(httpStatus.BAD_REQUEST,"User is not verified")
+        }
+         
+     
+     if (isUserExist.isActive === IsActive.BLOCKED || isUserExist.isActive === IsActive.INACTIVE) {
+        throw new AppError(httpStatus.BAD_REQUEST,`User iS ${isUserExist.isActive}`)
+           
+     }
+  
+  
+  
+     if (isUserExist.isDeleted) {
+        throw new AppError(httpStatus.BAD_REQUEST,"User is deleted")
+     }
+
+  
+  const jwtPayload = {
+    userId: isUserExist._id,
+    email: isUserExist.email,
+    role: isUserExist.role
+  }
+
+  const resetToken = Jwt.sign(jwtPayload, envVars.JWT_ACCESS_SECRET, {
+    expiresIn: "10m"
+  })
+
+  const resetUrl=`${envVars.FONTEND_URL}/reset-password?id=${isUserExist._id}&token=${resetToken}`
+
+  sendEmail({
+  to: isUserExist.email,
+  subject: "Reset Your Password",
+  templateName: "forgetPassword",
+  templateData: {
+    name: isUserExist.name,
+    resetUrl // এই নাম template এ match করতে হবে
+  }
+ });
+
+
+// fsast@123
+
+  return true;
+};
 
    
 const changePassword = async (
@@ -181,9 +239,10 @@ const changePassword = async (
 
 
 export const AuthService = {
-   credentialsLogin,
+  credentialsLogin,
   getNewAccessToken,
   changePassword,
-   setPassword,
+  setPassword,
+  forgotPassword,
    resetPassword
 }

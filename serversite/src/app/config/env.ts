@@ -36,6 +36,16 @@ interface EnvConfig {
     CLOUDINARY_API_KEY: string,
     CLOUDINARY_API_SECRET: string
   }
+
+    EMIAL_SENDER: {
+      
+      SMTP_HOST: string;
+      SMTP_PORT: string;
+      SMPT_USER: string;
+      SMTP_PASS: string;
+      SMTP_FROM: string
+    }
+
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -67,7 +77,14 @@ const loadEnvVariables = (): EnvConfig => {
    "SSL_CANCEL_BACKEND_URL",
    "CLOUDINARY_API_SECRET",
    "CLOUDINARY_API_KEY",
-   "CLOUDINARY_CLOUD_NAME"
+   "CLOUDINARY_CLOUD_NAME",
+   "SMTP_HOST",
+   "SMTP_PORT",
+   "SMPT_USER",
+   "SMTP_FROM"
+
+
+
     
       
       
@@ -116,6 +133,14 @@ const loadEnvVariables = (): EnvConfig => {
       CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
       CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY as string,
       CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string,
+    },
+    EMIAL_SENDER: {
+      
+      SMTP_HOST: process.env.SMTP_HOST as string,
+      SMTP_PORT: process.env.SMTP_PORT as string,
+      SMPT_USER: process.env.SMPT_USER as string,
+      SMTP_PASS: process.env.SMTP_PASS as string,
+      SMTP_FROM: process.env.SMTP_FROM as string
     }
   };
 };
