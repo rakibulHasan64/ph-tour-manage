@@ -34,7 +34,7 @@ passport.use(
 
          const ispasswordMacth = await bcrypt.compare(password as string, isUserExist.password as string)
          if (!ispasswordMacth) {
-                 return done(null, false, {message: "Password does not match"})
+            return done(null, false, {message: "Password does not match"})
          
          }
          
@@ -108,6 +108,7 @@ passport.serializeUser((user: Express.User, done: (err: any, id?: unknown) => vo
 
 
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 passport.deserializeUser(async (id: string, done: any) => {
    try {
 
@@ -120,3 +121,4 @@ passport.deserializeUser(async (id: string, done: any) => {
       
    }
 })
+

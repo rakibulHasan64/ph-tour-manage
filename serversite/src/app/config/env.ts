@@ -19,6 +19,18 @@ interface EnvConfig {
   EXPRESS_SESSION_SECRET: string;
   GOOGLE_CALLBACK_URL: string;
   FONTEND_URL: string;
+  SSL: {
+    SSL_STORE_ID: string,
+    SSL_STORE_PSS: string,
+    SSL_PAYMANT_API: string,
+    SSL_VALTDATION_API: string,
+    SSL_SUCCESS_FRONTEND_URL: string,
+    SSL_FAIL_FRONTEND_URL: string,
+    SSL_CANCEL_FRONTEND_URL: string,
+    SSL_SUCCESS_BACKEND_URL: string,
+    SSL_FAIL_BACKEND_URL: string,
+    SSL_CANCEL_BACKEND_URL: string,
+  }
 }
 
 const loadEnvVariables = (): EnvConfig => {
@@ -37,7 +49,23 @@ const loadEnvVariables = (): EnvConfig => {
    "GOOGLE_CLIENT_ID",
    "EXPRESS_SESSION_SECRET",
    "GOOGLE_CALLBACK_URL",
-    "FONTEND_URL"
+   "FONTEND_URL",
+   "SSL_STORE_ID",
+   "SSL_STORE_PSS",
+   "SSL_PAYMANT_API",
+   "SSL_VALTDATION_API",
+   "SSL_SUCCESS_FRONTEND_URL",
+   "SSL_FAIL_FRONTEND_URL", 
+   "SSL_CANCEL_FRONTEND_URL",
+   "SSL_SUCCESS_BACKEND_URL",
+   "SSL_FAIL_BACKEND_URL",
+    "SSL_CANCEL_BACKEND_URL"
+    
+      
+      
+      
+    
+    
   ];
 
   requiredEnvVariables.forEach((key) => {
@@ -62,7 +90,26 @@ const loadEnvVariables = (): EnvConfig => {
     EXPRESS_SESSION_SECRET: process.env.EXPRESS_SESSION_SECRET as string,
     GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL as string,
     FONTEND_URL: process.env.FONTEND_URL as string,
+    SSL: {
+      SSL_STORE_ID: process.env.SSL_STORE_ID as string,
+      SSL_STORE_PSS: process.env.SSL_STORE_PSS as string,
+      SSL_PAYMANT_API: process.env.SSL_PAYMANT_API as string,
+      SSL_VALTDATION_API: process.env.SSL_VALTDATION_API as string,
+      SSL_SUCCESS_FRONTEND_URL: process.env.SSL_SUCCESS_FRONTEND_URL as string,
+      SSL_FAIL_FRONTEND_URL: process.env.SSL_FAIL_FRONTEND_URL as string,
+      SSL_CANCEL_FRONTEND_URL: process.env.SSL_CANCEL_FRONTEND_URL as string,
+      SSL_SUCCESS_BACKEND_URL: process.env.SSL_SUCCESS_BACKEND_URL as string,
+      SSL_FAIL_BACKEND_URL: process.env.SSL_FAIL_BACKEND_URL as string,
+      SSL_CANCEL_BACKEND_URL: process.env.SSL_CANCEL_BACKEND_URL as string,
+
+    },
   };
 };
 
 export const envVars = loadEnvVariables();
+
+
+
+
+
+
