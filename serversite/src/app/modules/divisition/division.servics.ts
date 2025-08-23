@@ -1,3 +1,4 @@
+import { deleteImageFromCLoudinary } from "../../config/cloudnery.config";
 import { IDivision } from "./division.interface";
 import { Division } from "./division.modul";
 
@@ -63,16 +64,6 @@ const updateDivision = async (id: string, payload: Partial<IDivision>) => {
       _id: { $ne: id },
    });
 
-   // if (payload.name) {
-   //    const baseslug = payload.name.toLowerCase().split(" ").join("-");
-   //    let slug = `${baseslug}-division`
-   //    let counter = 0;
-   //    while (await Division.exists({ slug })) {
-   //     slug=`${slug}-${counter++}`
-   //    }
-
-   //   payload.slug = slug;
-   // }
 
 
    if (duplicateDivision) {
@@ -81,6 +72,10 @@ const updateDivision = async (id: string, payload: Partial<IDivision>) => {
    }
 
    const updatedDivision = await Division.findByIdAndUpdate(id, payload, { new: true, runValidators: true })
+
+   if (payload.thumbnail && existingDivision.thumbnail) {
+      await deleteImageFromCLoudinary(existingDivision.thumbnail)
+   }
 
    return updatedDivision
        

@@ -5,11 +5,12 @@ import httpStatus from "http-status-codes";
 import { UserServies } from "./user.service";
 import { catchAsync } from "../../utils/catchAsyn";
 import { sendResponse } from "../../utils/sendRespons";
+import { JwtPayload } from "jsonwebtoken";
 
 
 
 
-export const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction)=> {
+const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction)=> {
   const user = await UserServies.createUser(req.body);
   sendResponse(res, {
     success: true,
@@ -25,7 +26,7 @@ export const createUser = catchAsync(async (req: Request, res: Response, next: N
 
 
 
-export const UpdeaedUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const UpdeaedUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   
   const userId = req.params.id;
   // const token = req.headers.authorization
@@ -52,14 +53,14 @@ export const UpdeaedUser = catchAsync(async (req: Request, res: Response, next: 
 
 
 // ✅ Corrected getAllUsers function
-export const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const result = await UserServies.getAllUsers();
     sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "AllUser created successfully",
     data: result.data,
-    meta: result.mata
+    mata: result.mata
     
     
 
@@ -67,12 +68,39 @@ export const getAllUsers = catchAsync(async (req: Request, res: Response, next: 
 });
 
 
+const getMeAllUsers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  
+  const decodedToken=req.user as JwtPayload
+  const result = await UserServies.getMeAllUsers(decodedToken.userId);
+    sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Yours Profils successfully",
+    data: result.data,
+
+    
+    
+
+  })
+});
 
 
+const getSingleUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const result = await UserServies.getSingelUser(id);
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "User Retrieved Successfully",
+        data: result.data
+    })
+})
 
 export const userControllers = {
   createUser,
+  getMeAllUsers,
   getAllUsers,
-  UpdeaedUser
+  UpdeaedUser,
+  getSingleUser
 }
 

@@ -11,11 +11,9 @@ import { Tour } from "../toure/tour.module";
 import { User } from "../user/user.module";
 import { SSLService } from "../sslcomarz/sslcomarz.servise";
 import { ISSLCommerz } from "../sslcomarz/sslcomarz.interfase";
+import { getTransactionId } from "../../utils/getTransctionId";
 
 
-const getTransactionId = () => {
-    return `tran_${Date.now()}_${Math.floor(Math.random() * 1000)}`
-}
 
 
 

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import AppError from "../../errorHelpers/AppError";
-import {  IUser } from "../user/user.interface";
+import {  IAuthProvider, IUser } from "../user/user.interface";
 import httpStatus from "http-status-codes";
 import { User } from "../user/user.module";
 import bcrypt from "bcryptjs";
@@ -129,11 +130,60 @@ const resetPassword = async (
 };
 
 
+   
+const setPassword = async (userId: string, plainPassword: string) => {
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(404, "User not found");
+  }
+
+  if (user.password && user.auths.some(providerObject=> providerObject.provider === "google")) {
+     throw new AppError(httpStatus.BAD_REQUEST,"Password is already set. Use change password instead")
+  }
+
+  const hasPassword=await bcrypt.hash(plainPassword,Number(envVars.BCRYPT_SALT_ROUND))
+
+  const credentialProvider: IAuthProvider = {
+    provider: "credentials",
+    providerId: user.email as string
+   }
+  const auths: IAuthProvider[] = [...user.auths, credentialProvider]
+  
+  user.password = hasPassword
+  user.auths = auths
+  
+  await user.save()
+
+
+
+
+
+
+
+  return true;
+};
+
+
+   
+const changePassword = async (
+  oldPassword: string,
+  newPassword: string,
+  decodedToken: JwtPayload
+) => {
+ 
+
+  return {};
+};
+
+
 
 
 
 export const AuthService = {
    credentialsLogin,
-   getNewAccessToken,
+  getNewAccessToken,
+  changePassword,
+   setPassword,
    resetPassword
 }

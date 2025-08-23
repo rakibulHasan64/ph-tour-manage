@@ -5,6 +5,7 @@ import { envVars } from "../config/env";
 import AppError from "../errorHelpers/AppError";
 import mongoose from "mongoose";
 import { ZodError } from "zod";
+import { deleteImageFromCLoudinary } from "../config/cloudnery.config";
 
 interface TErrorSources {
   path: string;
@@ -64,7 +65,23 @@ const handleZodError = (err: ZodError): TGenericErrorResponse => {
 };
 
 
-export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const globalErrorHandler =async (err: any, req: Request, res: Response, next: NextFunction) => {
+  if (envVars.NODE_ENV === "development") {
+    // eslint-disable-next-line no-console
+    console.log(err);
+    
+  }
+
+  if (req.file) {
+    await deleteImageFromCLoudinary(req.file.path)
+  }
+
+  if (req.files && Array.isArray(req.files) && req.files.length) {
+    
+    const imageUrl = (req.files as Express.Multer.File[]).map(File => File.path)
+    await Promise.all(imageUrl.map(url=> deleteImageFromCLoudinary(url)))
+    
+  }
   let statusCode = err.statusCode || 500;
   let message = "Internal Server Error";
   let errorSources: TErrorSources[] = [];

@@ -1,11 +1,17 @@
 import { catchAsync } from "../../utils/catchAsyn";
 import { sendResponse } from "../../utils/sendRespons";
+import { ITour } from "./tour.interface";
 import { TourService } from "./tour.sercvic";
 import { Request, Response } from 'express';
 
 const createTour = catchAsync(async (req: Request, res: Response) => {
+     
 
-    const result = await TourService.createTour(req.body);
+    const paylod: ITour = {
+        ...req.body,
+        images: (req.files as Express.Multer.File[]).map(file=> file.path)
+    }
+    const result = await TourService.createTour(paylod);
     sendResponse(res, {
         statusCode: 201,
         success: true,
@@ -30,7 +36,12 @@ const getAllTours = catchAsync(async (req: Request, res: Response) => {
 
 const updateTour = catchAsync(async (req: Request, res: Response) => {
     
-    const result = await TourService.updateTour(req.params.id,req.body)
+
+    const paylod: ITour = {
+        ...req.body,
+        images: (req.files as Express.Multer.File[]).map(file=> file.path)
+    }
+    const result = await TourService.updateTour(req.params.id,paylod)
     sendResponse(res, {
         statusCode: 201,
         success: true,

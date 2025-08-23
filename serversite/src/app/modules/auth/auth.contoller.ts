@@ -144,6 +144,48 @@ const resetPassword = catchAsync(
 );
 
 
+const changePassword = catchAsync(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user;
+    const { oldPassword, newPassword } = req.body; // ✅ destructure
+
+    if (!oldPassword || !newPassword) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "Old password and new password are required"
+      );
+    }
+
+    await AuthService.resetPassword(oldPassword, newPassword, decodedToken as JwtPayload);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "User reset password successfully",
+      data: null,
+    });
+  }
+);
+
+
+
+const setPassword = catchAsync(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const {password}=req.body
+
+    await AuthService.setPassword(decodedToken.userId,password);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "User reset password successfully",
+      data: null,
+    });
+  }
+);
 
 
 
@@ -175,5 +217,7 @@ export const AuthController = {
   getNewAccessToken,
   logout,
   resetPassword,
+  setPassword,
+  changePassword,
   googleCallbackContolar
 }

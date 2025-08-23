@@ -5,10 +5,11 @@ import passport, { Profile } from "passport";
 import { Strategy as GoogleStrategy, VerifyCallback,  } from "passport-google-oauth20";
 import { envVars } from "./env";
 import { User } from "../modules/user/user.module";
-import { Role } from "../modules/user/user.interface";
+import { IsActive, Role } from "../modules/user/user.interface";
 import {Strategy as LocalStrategy} from "passport-local"
 import bcrypt from "bcryptjs";
-
+import httpStatus from "http-status-codes";
+import AppError from "../errorHelpers/AppError";
 
 passport.use(
    new LocalStrategy({
@@ -25,6 +26,26 @@ passport.use(
          if (!isUserExist) {
              return done("User does not exist")
          }
+
+         if (!isUserExist.isVerified) {
+       
+         done("User is not verified")
+        }
+
+         if (isUserExist.isActive === IsActive.BLOCKED || isUserExist.isActive === IsActive.INACTIVE) {
+            done(`User iS ${isUserExist.isActive}`)
+         
+         }
+
+
+
+       if (isUserExist.isDeleted) {
+      
+         done("User is deleted")
+       }
+    
+      
+      
 
          const isGoogleAuthenticated = isUserExist.auths.some(providerObjects => providerObjects.provider == "google")
          
