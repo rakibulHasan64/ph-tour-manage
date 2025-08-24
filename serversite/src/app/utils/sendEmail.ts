@@ -5,12 +5,12 @@ import path from "path"
 import AppError from "../errorHelpers/AppError";
 const transpoter = nodemailer.createTransport({
 
-   host: envVars.EMIAL_SENDER.SMTP_HOST,
-   port: Number(envVars.EMIAL_SENDER.SMTP_PORT),
+   host: envVars.EMAIL_SENDER.SMTP_HOST,
+   port: Number(envVars.EMAIL_SENDER.SMTP_PORT),
    secure: true,
    auth: {
-      user: envVars.EMIAL_SENDER.SMPT_USER,
-      pass: envVars.EMIAL_SENDER.SMTP_PASS
+      user: envVars.EMAIL_SENDER.SMTP_USER,
+      pass: envVars.EMAIL_SENDER.SMTP_PASS
    }
 
 
@@ -41,7 +41,7 @@ export const sendEmail = async ({
         const templatePath = path.join(__dirname, `templates/${templateName}.ejs`)
         const html = await ejs.renderFile(templatePath, templateData)
         const info = await transpoter.sendMail({
-            from: envVars.EMIAL_SENDER.SMTP_FROM,
+            from: envVars.EMAIL_SENDER.SMTP_FROM,
             to: to,
             subject: subject,
             html: html,

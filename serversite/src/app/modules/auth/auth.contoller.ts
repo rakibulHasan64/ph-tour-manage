@@ -98,28 +98,6 @@ const logout = catchAsync(async (req: Request, res: Response, next: NextFunction
 
 
 
-// const resetPassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  
-//   const decodedToken = req.user;
-//   const newPassword = req.body.newpassword   // এখানে n ছোট হাতের
-//    const oldPassword = req.body.oldPassword
-
-
-//   const newupdedPasswords = await AuthService.resetPassword(oldPassword, newPassword, decodedToken)
-  
-
-  
-
-
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: httpStatus.OK,
-//     message: "User resertpassword successfully",
-//     data: null,
-
-//   })
-// });
-
 const resetPassword = catchAsync(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async (req: Request, res: Response, next: NextFunction) => {
@@ -139,30 +117,22 @@ const resetPassword = catchAsync(
   }
 );
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const changePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
-const changePassword = catchAsync(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async (req: Request, res: Response, next: NextFunction) => {
-    const decodedToken = req.user;
-    const { oldPassword, newPassword } = req.body; // ✅ destructure
+    const newPassword = req.body.newPassword;
+    const oldPassword = req.body.oldPassword;
+    const decodedToken = req.user
 
-    if (!oldPassword || !newPassword) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        "Old password and new password are required"
-      );
-    }
-
-    await AuthService.resetPassword(oldPassword, newPassword, decodedToken as JwtPayload);
+    await AuthService.changePassword(oldPassword, newPassword, decodedToken as JwtPayload);
 
     sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: "User reset password successfully",
-      data: null,
-    });
-  }
-);
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Password Changed Successfully",
+        data: null,
+    })
+})
 
 
 

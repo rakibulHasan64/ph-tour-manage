@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import AppError from "../../errorHelpers/AppError";
 import {  IAuthProvider, IsActive, IUser } from "../user/user.interface";
@@ -231,7 +232,18 @@ const changePassword = async (
 ) => {
  
 
-  return {};
+    const user = await User.findById(decodedToken.userId)
+
+    const isOldPasswordMatch = await bcryptjs.compare(oldPassword, user!.password as string)
+    if (!isOldPasswordMatch) {
+        throw new AppError(httpStatus.UNAUTHORIZED, "Old Password does not match");
+    }
+
+    user!.password = await bcryptjs.hash(newPassword, Number(envVars.BCRYPT_SALT_ROUND))
+
+    user!.save();
+
+
 };
 
 

@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import app from "./app";
 import { envVars } from "./config/env";
 import { seedSuPerAdmin } from "./utils/seer.superAdmin";
+import { connactReids } from "./config/redis.confog";
 
 let server: Server;
 
@@ -28,6 +29,7 @@ const startServer = async () => {
 };
 
 (async () => {
+   await connactReids();
   await startServer();
   await seedSuPerAdmin();
 })();
