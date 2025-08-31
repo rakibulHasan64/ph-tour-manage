@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { uploadBufferToCloudinary } from "../../config/cloudnery.config";
 import AppError from "../../errorHelpers/AppError";
 import { generatePdf, IInvoiceData } from "../../utils/invoicos";
 import { sendEmail } from "../../utils/sendEmail";
@@ -114,7 +115,7 @@ const successPayment = async (query: Record<string, string>) => {
             attachments: [
                 {
                     filename: "invoice.pdf",
-                    content: pdfBuffer,
+                    content: pdfBuffer.toString("base64"),
                     contentType: "application/pdf"
                 }
             ]
@@ -257,13 +258,33 @@ const cancelPyamnt = async (query: Record<string, string> ) => {
 
 
 
+const getInvoiceDownload = async (paymentId: string) => {
+    const payment = await Payment.findById(paymentId)
+        .select("invoiceUrl")
+
+    if (!payment) {
+        throw new AppError(401, "Payment not found")
+    }
+
+    if (!payment.invoiceUrl) {
+        throw new AppError(401, "No invoice found")
+    }
+
+    return payment.invoiceUrl
+};
+
+
 
 
 
 
 export const PymantService = {
-   successPaymant,
+   successPayment,
    failPaymant,
   cancelPyamnt,
-   initPymant
+  initPymant,
+  getInvoiceDownload,
+   
 }
+
+

@@ -3,6 +3,7 @@ import { catchAsync } from "../../utils/catchAsyn";
 import { PymantService } from "./pymant.servise";
 import { envVars } from "../../config/env";
 import { sendResponse } from "../../utils/sendRespons";
+import { SSLService } from "../sslcomarz/sslcomarz.servise";
 
 
 const initPyment = catchAsync(async (req: Request, res: Response) => {
@@ -21,12 +22,14 @@ const initPyment = catchAsync(async (req: Request, res: Response) => {
 
 const successPymants = catchAsync(async (req: Request, res: Response) => {
    const query = req.query;
-   const result = await PymantService.successPaymant(query as Record<string, string>)
+   const result = await PymantService.successPayment(query as Record<string, string>)
    
    if (result.success) {
         res.redirect(`${envVars.SSL.SSL_SUCCESS_FRONTEND_URL}?transactionId=${query.transactionId}&message=${result.message}&amount=${query.amount}&status=${query.status}`)
     }
 })
+
+
 
 
 
@@ -53,9 +56,41 @@ const cancelPymants = catchAsync(async (req: Request, res: Response) => {
 
 
 
+const getInvoiceDownload = catchAsync(
+    async (req: Request, res: Response) => {
+        const { paymentId } = req.params;
+        const result = await PymantService.getInvoiceDownload(paymentId);
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Invoice download URL retrieved successfully",
+            data: result,
+        });
+    }
+);
+
+const validatePayment= catchAsync(
+   async (req: Request, res: Response) => {
+      // eslint-disable-next-line no-console
+      console.log("sslComarz ipn url body", req.body);
+      
+       
+         await SSLService.validatePaymant(req.body);
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Paymant Validated Successfully",
+            data: null,
+        });
+    }
+);
+
+
 export const PymantCallation = {
+   getInvoiceDownload,
    successPymants,
    failPymants,
    cancelPymants,
-   initPyment
+   initPyment,
+   validatePayment
 }

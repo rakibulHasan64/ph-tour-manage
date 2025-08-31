@@ -30,6 +30,9 @@ interface sendEmailOptions{
 }
 
 
+
+
+
 export const sendEmail = async ({
     to,
     subject,
@@ -53,6 +56,7 @@ export const sendEmail = async ({
         })
               // eslint-disable-next-line no-console
         console.log(`\u2709\uFE0F Email sent to ${to}: ${info.messageId}`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         // eslint-disable-next-line no-console
         console.log("email sending error", error.message);

@@ -21,7 +21,7 @@ export const checkAuth = (...authRoles: string[]) => async (
 ) => {
    
    try {
-      const accessToken = req.headers.authorization;
+      const accessToken = req.headers.authorization?.split(" ")[1];
       if (!accessToken) {
          throw new AppError(403, "no token Recvid")
       }

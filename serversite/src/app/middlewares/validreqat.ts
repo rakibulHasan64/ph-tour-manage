@@ -1,27 +1,9 @@
 
-
-// import { NextFunction, Request, Response } from "express";
-
-
-// export const validateRequest = (zodSchema: AnyZodObject) =>
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//       req.body = await zodSchema.parseAsync(req.body);
-//       next();
-//     } catch (error: any) {
-//       res.status(400).json({
-//         success: false,
-//         message: error.errors || error.message || "Validation error",
-//       });
-//     }
-//   };
-
-
 import { NextFunction, Request, Response } from "express";
-import { AnyZodObject, ZodError } from "zod";
+import { ZodObject, ZodError } from "zod";
 
 
-export const validateRequest = (zodSchema: AnyZodObject) =>
+export const validateRequest = (zodSchema: ZodObject) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
 
@@ -30,6 +12,7 @@ export const validateRequest = (zodSchema: AnyZodObject) =>
       }
     req.body = await zodSchema.parseAsync(req.body);
     next();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error instanceof ZodError) {
         return res.status(400).json({

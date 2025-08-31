@@ -14,6 +14,8 @@ export interface IAuthProvider {
   providerId: string;
 }
 
+
+
 // Active Status
 export enum IsActive {
   ACTIVE = "ACTIVE",
@@ -37,5 +39,6 @@ export interface IUser {
   auths: IAuthProvider[];
   bookings?: Types.ObjectId[];
   guides?: Types.ObjectId[];
+  createdAt?: Date;
 }
  

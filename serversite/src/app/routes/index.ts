@@ -6,6 +6,8 @@ import { TourRoutes } from "../modules/toure/tour.route";
 import { BookingRoutes } from "../modules/booking/booking.route";
 import { PymantRoutes } from "../modules/pymant/pymantRoute";
 import { OtpRoutes } from "../modules/otp/otp.route";
+import { StatsRoutes } from "../modules/stats/stats.route";
+
 
 
 
@@ -40,10 +42,10 @@ const moduleRoutes = [
         path: "/otp",
         route: OtpRoutes
     },
-   //  {
-   //      path: "/stats",
-   //      route: StatsRoutes
-   //  },
+    {
+        path: "/stats",
+        route: StatsRoutes
+    },
 ];
 
 moduleRoutes.forEach((route) => {

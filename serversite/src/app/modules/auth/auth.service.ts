@@ -25,7 +25,7 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
          
    }
    
-   const ispasswordMacth = await bcrypt.compare(password as string, isUserExist.password as string)
+   const ispasswordMacth = await bcryptjs.compare(password as string, isUserExist.password as string)
 
 
    if (!ispasswordMacth) {
@@ -174,10 +174,11 @@ const forgotPassword = async (email: string) => {
 
   
      
-     if (!isUserExist) {
+   if (!isUserExist) {
+        
         throw new AppError(httpStatus.BAD_REQUEST,"User does not exist")
            
-        }
+      }
         
            if (!isUserExist.isVerified) {
           throw new AppError(httpStatus.BAD_REQUEST,"User is not verified")

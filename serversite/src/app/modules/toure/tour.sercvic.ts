@@ -14,14 +14,14 @@ const createTour = async (payload: ITour) => {
        throw new Error("A tour with this title already exists.");
     }
 
-    const baseslug = payload.title.toLowerCase().split(" ").join("-");
-       let slug = `${baseslug}-division`
-       let counter = 0;
-       while (await Tour.exists({ slug })) {
-          slug=`${slug}-${counter++}`
-    }
+    // const baseslug = payload.title.toLowerCase().split(" ").join("-");
+    //    let slug = `${baseslug}-division`
+    //    let counter = 0;
+    //    while (await Tour.exists({ slug })) {
+    //       slug=`${slug}-${counter++}`
+    // }
     
-    payload.slug = slug;
+    // payload.slug = slug;
 
     const tour = await Tour.create(payload)
     
@@ -68,16 +68,6 @@ const updateTour = async (id: string, payload: Partial<ITour>) => {
     }
     
 
-    // if (payload.title) {
-    //    const baseslug = payload.title.toLowerCase().split(" ").join("-");
-    //    let slug = `${baseslug}-division`
-    //    let counter = 0;
-    //    while (await Tour.exists({ slug })) {
-    //     slug=`${slug}-${counter++}`
-    //   }
-    //         payload.slug = slug;
-
-    // }
 
        if (payload.images && payload.images.length > 0 && existingTour.images && existingTour.images.length > 0) {
         payload.images = [...payload.images, ...existingTour.images]
@@ -107,6 +97,7 @@ const updateTour = async (id: string, payload: Partial<ITour>) => {
     return updateTours
 
 }
+
 
 
 const deleteTour = async (id: string) => {
@@ -163,3 +154,5 @@ export const TourService = {
     updateTour,
     deleteTour,
 };
+
+

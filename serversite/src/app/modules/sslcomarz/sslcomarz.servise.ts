@@ -1,8 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { envVars } from "../../config/env";
 import { ISSLCommerz } from "./sslcomarz.interfase";
 import AppError from "../../errorHelpers/AppError";
 import httpStatus from "http-status-codes"
+import { Payment } from "../pymant/pymant.modal";
+
+
 
 
 export const sslPaymantInit =async (payload: ISSLCommerz) => {
@@ -17,7 +21,7 @@ export const sslPaymantInit =async (payload: ISSLCommerz) => {
             success_url: `${envVars.SSL.SSL_SUCCESS_BACKEND_URL}?transactionId=${payload.transactionId}&amount=${payload.amount}&status=success`,
             fail_url: `${envVars.SSL.SSL_FAIL_BACKEND_URL}?transactionId=${payload.transactionId}&amount=${payload.amount}&status=fail`,
             cancel_url: `${envVars.SSL.SSL_CANCEL_BACKEND_URL}?transactionId=${payload.transactionId}&amount=${payload.amount}&status=cancel`,
-            // ipn_url: "http://localhost:3030/ipn",
+            ipn_url: envVars.SSL.SSL_IPN_URL,
             shipping_method: "N/A",
             product_name: "Tour",
             product_category: "Service",
@@ -51,14 +55,51 @@ export const sslPaymantInit =async (payload: ISSLCommerz) => {
 
       return  respons.data;
       
-   } catch (error) {
+   } catch (error ) {
        // eslint-disable-next-line no-console
        console.log("Payment Error Occured", error);
-        throw new AppError(httpStatus.BAD_REQUEST, error.message)
+        if (error instanceof Error) {
+          throw new AppError(httpStatus.BAD_REQUEST, error.message);
+        } else {
+          throw new AppError(httpStatus.BAD_REQUEST, "An unknown error occurred");
+        }
    }
 
 } 
 
+
+const validatePaymant = async (payload: any) => {
+   try {
+
+
+      const response =await axios({
+      method: "GET",
+      url: `${envVars.SSL.SSL_VALTDATION_API}?val_id=${payload.val_id}&store_id=${envVars.SSL.SSL_STORE_ID}&store_passwd=${envVars.SSL.SSL_STORE_PSS}`
+      })
+
+      // eslint-disable-next-line no-console
+      console.log("sslcomaerz validate api response", response.data);
+      
+
+      await Payment.updateOne({ transactionId: payload.tran_id }, { paymentGatewayData: (await response).data },
+         {runValidators: true}
+      )
+      
+   
+   } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+      if (error instanceof Error) {
+         throw new AppError(401, `Paymant Validtion Error,${error.message}`);
+      } else {
+         throw new AppError(401, "Paymant Validtion Error, unknown error");
+      }
+      
+   }
+}
+
+
 export const SSLService = {
-    sslPaymantInit
+   sslPaymantInit,
+   validatePaymant 
 }

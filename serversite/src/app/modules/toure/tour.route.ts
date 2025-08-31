@@ -37,4 +37,3 @@ router.delete("/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), TourController.de
 
 export const TourRoutes = router
 
-

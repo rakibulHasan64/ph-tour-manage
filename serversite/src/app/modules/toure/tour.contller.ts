@@ -4,14 +4,34 @@ import { ITour } from "./tour.interface";
 import { TourService } from "./tour.sercvic";
 import { Request, Response } from 'express';
 
-const createTour = catchAsync(async (req: Request, res: Response) => {
+// const createTour = catchAsync(async (req: Request, res: Response) => {
      
 
-    const paylod: ITour = {
+//     const paylod: ITour = {
+//         ...req.body,
+//         images: (req.files as Express.Multer.File[]).map(file=> file.path)
+//     }
+//     const result = await TourService.createTour(paylod);
+//     sendResponse(res, {
+//         statusCode: 201,
+//         success: true,
+//         message: 'Tour created successfully',
+//         data: result,
+//     });
+// });
+
+const createTour = catchAsync(async (req: Request, res: Response) => {
+    const images = Array.isArray(req.files)
+        ? (req.files as Express.Multer.File[]).map(file => file.path)
+        : [];
+
+    const payload: ITour = {
         ...req.body,
-        images: (req.files as Express.Multer.File[]).map(file=> file.path)
-    }
-    const result = await TourService.createTour(paylod);
+        images
+    };
+
+    const result = await TourService.createTour(payload);
+
     sendResponse(res, {
         statusCode: 201,
         success: true,
@@ -19,7 +39,6 @@ const createTour = catchAsync(async (req: Request, res: Response) => {
         data: result,
     });
 });
-
 
 const getAllTours = catchAsync(async (req: Request, res: Response) => {
     const query = req.query

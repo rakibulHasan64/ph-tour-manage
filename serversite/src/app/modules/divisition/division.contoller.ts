@@ -23,7 +23,8 @@ const createDivision = catchAsync(async (req: Request, res: Response) => {
 
 
 const getAllDivisions = catchAsync(async (req: Request, res: Response) => {
-   const result = await DivisionService.getAllDivisions();
+   const query = req.query;
+   const result = await DivisionService.getAllDivisions(query as Record<string, string>);
    
 
    sendResponse(res, {
@@ -31,7 +32,7 @@ const getAllDivisions = catchAsync(async (req: Request, res: Response) => {
       success: true,
       message: "Division  retrieved",
       data: result.data,
-      meta: result.mata
+      meta: result.meta
    });
 });
 

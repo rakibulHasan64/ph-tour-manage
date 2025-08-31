@@ -6,3 +6,4 @@ export interface ISSLCommerz {
     phoneNumber: string;
     address: string
 }
+

@@ -29,12 +29,10 @@ const createUser = catchAsync(async (req: Request, res: Response, next: NextFunc
 const UpdeaedUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   
   const userId = req.params.id;
-  // const token = req.headers.authorization
-  // const verifiedToken = verifyToken(token as string, envVars.JWT_ACCESS_SECRET) as JwtPayload
-  const verifiedToken = req.user;
+  const verifiedToken = req.user as JwtPayload;
   const paylod = req.body;
   
-  const user = await UserServies.updatedUser(userId,paylod,verifiedToken);
+  const user = await UserServies.updatedUser(userId,paylod,verifiedToken );
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
@@ -54,13 +52,17 @@ const UpdeaedUser = catchAsync(async (req: Request, res: Response, next: NextFun
 
 // ✅ Corrected getAllUsers function
 const getAllUsers = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const result = await UserServies.getAllUsers();
+
+
+  const query = req.query;
+  const result = await UserServies.getAllUsers(query as Record<string, string>);
     sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "AllUser created successfully",
     data: result.data,
-    mata: result.mata
+    meta: result.meta  // ✅
+
     
     
 
@@ -103,4 +105,10 @@ export const userControllers = {
   UpdeaedUser,
   getSingleUser
 }
+
+
+
+
+
+
 
