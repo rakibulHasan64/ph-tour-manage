@@ -29,7 +29,6 @@ const createBooking = (payload, userId) => __awaiter(void 0, void 0, void 0, fun
     const session = yield booking_model_1.Booking.startSession();
     session.startTransaction();
     try {
-        // ✅ সব জায়গায় session যোগ করুন
         const user = yield user_module_1.User.findById(userId).session(session);
         if (!(user === null || user === void 0 ? void 0 : user.phone) || !user.address) {
             throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Please Update Your Profile to Book a Tour.");

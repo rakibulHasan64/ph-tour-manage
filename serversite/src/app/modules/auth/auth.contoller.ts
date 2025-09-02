@@ -21,11 +21,11 @@ const credentialsLogin = catchAsync(async (req: Request, res: Response, next: Ne
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   passport.authenticate("local", async (err: any, user: any, info: any) => {
      if (err) {
-       return next(new AppError(err.statusCode || 401, err.message));
+           return next(new AppError(401, err.message || "Authentication failed"));
      }
 
      if (!user) {
-       return next(new AppError(401, info.message));
+       return next(new AppError(401, info?.message || "Invalid email or password"));
      }
 
      const userToken = await creatUserTokens(user);
@@ -183,6 +183,7 @@ const  googleCallbackContolar = catchAsync(
       redirectTo=redirectTo.slice(1)
     }
     const user = req.user;
+    
    if (!user) {
       throw new AppError(httpStatus.NOT_FOUND,"User Not Found")
    }

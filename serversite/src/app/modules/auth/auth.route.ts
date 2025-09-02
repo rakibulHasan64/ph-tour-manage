@@ -28,8 +28,16 @@ router.get("/google", async (req: Request, res: Response, next: NextFunction) =>
 
 
 
-router.get('/google/callback', passport.authenticate("google", {failureRedirect: `${envVars.FONTEND_URL}?error=There is some issues with Your account . plase concat support temeas`}), AuthController.googleCallbackContolar )
+router.get('/google/callback', passport.authenticate("google", { failureRedirect: `${envVars.FONTEND_URL}/login?error=There is some issues with Your account . plase concat support temeas`}), AuthController.googleCallbackContolar )
 
+
+// router.get("/google", async (req: Request, res: Response, next: NextFunction) => {
+//    const redirect = req.query.redirect || "/"
+//    passport.authenticate("google", { scope: ["profile", "email"], state: redirect as string })(req, res, next)
+// })
+
+
+// router.get("/google/callback", passport.authenticate("google", { failureRedirect: `${envVars.FONTEND_URL}/login?error=There is some issues with your account. Please contact with out support team!` }), AuthController.googleCallbackContolar)
 
 
 export const AuthRoutes = router;

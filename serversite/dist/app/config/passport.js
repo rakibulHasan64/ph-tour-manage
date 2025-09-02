@@ -30,20 +30,22 @@ passport_1.default.use(new passport_local_1.Strategy({
         //     return done(null,false,{message: "User does not exist"})
         // }
         if (!isUserExist) {
-            return done("User does not exist");
+            return done(null, false, { message: "User does not exist" });
         }
         if (!isUserExist.isVerified) {
-            return done("User is not verified");
+            return done(null, false, { message: "User is not verified" });
         }
         if (isUserExist.isActive === user_interface_1.IsActive.BLOCKED || isUserExist.isActive === user_interface_1.IsActive.INACTIVE) {
-            done(`User iS ${isUserExist.isActive}`);
+            return done(null, false, { message: `User is ${isUserExist.isActive}` });
         }
         if (isUserExist.isDeleted) {
-            return done("User is deleted");
+            return done(null, false, { message: "User is deleted" });
         }
         const isGoogleAuthenticated = isUserExist.auths.some(providerObjects => providerObjects.provider == "google");
         if (isGoogleAuthenticated && !isUserExist.password) {
-            return done("You have authebticed throught google plase want a login then login and password");
+            return done(null, false, {
+                message: "You signed up with Google, please use Google login.",
+            });
         }
         const ispasswordMacth = yield bcryptjs_1.default.compare(password, isUserExist.password);
         if (!ispasswordMacth) {
@@ -53,7 +55,7 @@ passport_1.default.use(new passport_local_1.Strategy({
     }
     catch (error) {
         console.log(error);
-        done(error);
+        return done(error);
     }
 })));
 passport_1.default.use(new passport_google_oauth20_1.Strategy({

@@ -37,10 +37,10 @@ const credentialsLogin = (0, catchAsyn_1.catchAsync)((req, res, next) => __await
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     passport_1.default.authenticate("local", (err, user, info) => __awaiter(void 0, void 0, void 0, function* () {
         if (err) {
-            return next(new AppError_1.default(err.statusCode || 401, err.message));
+            return next(new AppError_1.default(401, err.message || "Authentication failed"));
         }
         if (!user) {
-            return next(new AppError_1.default(401, info.message));
+            return next(new AppError_1.default(401, (info === null || info === void 0 ? void 0 : info.message) || "Invalid email or password"));
         }
         const userToken = yield (0, userTokens_1.creatUserTokens)(user);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

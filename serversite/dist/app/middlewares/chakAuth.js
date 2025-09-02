@@ -20,9 +20,9 @@ const user_interface_1 = require("../modules/user/user.interface");
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const user_module_1 = require("../modules/user/user.module");
 const checkAuth = (...authRoles) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b, _c;
     try {
-        const accessToken = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+        const accessToken = ((_b = (_a = req === null || req === void 0 ? void 0 : req.headers) === null || _a === void 0 ? void 0 : _a.authorization) === null || _b === void 0 ? void 0 : _b.split(" ")[1]) || ((_c = req.cookies) === null || _c === void 0 ? void 0 : _c.accessToken);
         if (!accessToken) {
             throw new AppError_1.default(403, "no token Recvid");
         }
