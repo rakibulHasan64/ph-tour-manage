@@ -8,15 +8,18 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { ModeToggle } from "./Mode.Toggle"
 import { authApi, useLogOutMutation, useUserInfoQuery } from "../../redux/featuer/auth/auth.api"
 import { useAppDispatch } from "../../redux/hook"
+import { role } from "../../constants/role"
+
 
 
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "/", label: "Home", active: true },
-  { href: "/about", label: "About" },
-  { href: "#", label: "Pricing" },
-  { href: "#", label: "About" },
+  { href: "/", label: "Home", role: "PUBLIC" },
+  { href: "/about", label: "About", role: "PUBLIC" },
+  { href: "admin", label: "Dashboard", role: role.admin },
+  { href: "admin", label: "SuperDashboard", role: role.superAdmin },
+  { href: "user", label: "UserDashboard", role: role.user },
 ]
 
 export default function Naver() {
@@ -24,7 +27,7 @@ export default function Naver() {
   const {data } = useUserInfoQuery(undefined);
   const [logOut] = useLogOutMutation();
   const dispatch=useAppDispatch()
-  console.log("user email me", data?.data?.email);
+  console.log("user email me", data?.data?.email, data?.data?.role);
 
   const hadleLogout = async () => {
     try {
@@ -39,6 +42,7 @@ export default function Naver() {
   return (
     <header className="border-b px-4 md:px-6 container mx-auto">
       <div className="flex h-16 items-center justify-between gap-4">
+      
         {/* Left side */}
         <div className="flex items-center gap-2">
           {/* Mobile menu trigger */}
@@ -80,16 +84,62 @@ export default function Naver() {
               <NavigationMenu className="max-w-none *:w-full">
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                   {navigationLinks.map((link, index) => (
-                    <NavigationMenuItem key={index} className="w-full">
-                      <NavigationMenuLink
-                        asChild
-                        className="py-1.5"
-                        active={link.active}
-                      >
-                        <Link to={link.href}>{link.label}</Link>
+                    <>
                       
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
+                      {
+                        link.role === "PUBLIC" && (
+                          <NavigationMenuItem key={index} className="w-full">
+                            <NavigationMenuLink
+                              asChild
+                              className="py-1.5"
+
+                            >
+                              <Link to={link.href}>{link.label}</Link>
+
+                            </NavigationMenuLink>
+                          </NavigationMenuItem>
+
+                        )
+                        
+                      }
+
+                      {
+                        link.role ===  data?.data?.role && (
+                          <NavigationMenuItem key={index} className="w-full">
+                            <NavigationMenuLink
+                              asChild
+                              className="py-1.5"
+
+                            >
+                              <Link to={link.href}>{link.label}</Link>
+
+                            </NavigationMenuLink>
+                          </NavigationMenuItem>
+
+                        )
+
+                      }
+
+
+                      {
+                        link.role === "PUBLIC" && (
+                          <NavigationMenuItem key={index} className="w-full">
+                            <NavigationMenuLink
+                              asChild
+                              className="py-1.5"
+
+                            >
+                              <Link to={link.href}>{link.label}</Link>
+
+                            </NavigationMenuLink>
+                          </NavigationMenuItem>
+
+                        )
+
+                      }
+                    
+                    
+                    </>
                   ))}
                 </NavigationMenuList>
               </NavigationMenu>
@@ -106,7 +156,6 @@ export default function Naver() {
                 {navigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index}>
                     <NavigationMenuLink
-                      active={link.active}
                       href={link.href}
                       className="text-muted-foreground hover:text-primary py-1.5 font-medium"
                     >

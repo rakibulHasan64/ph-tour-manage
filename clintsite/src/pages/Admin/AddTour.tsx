@@ -1,9 +1,9 @@
 
 
-function AddTour(props) {
+function AddTour() {
    return (
-      <div>
-         
+      <div className="text-6xl">
+         AddTour
       </div>
    );
 }

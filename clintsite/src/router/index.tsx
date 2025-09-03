@@ -1,13 +1,16 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import App from "../App";
 import HomePage from "../pages/HomePage";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Verfiy from "../pages/Verfiy";
 import DasbordLayout from "../components/layout/DasbordLayout";
-import Analatis from "../pages/Admin/Analatis";
-import Bookinge from "../pages/user/Bookinge";
-import AddTour from "../pages/Admin/AddTour";
+import { generateRoutes } from "../utils/generateRoutes";
+import { adminSidebarItems } from "./adminSideber";
+import { userSidebarItems } from "./UserSidber";
+import { withAuth } from "../utils/with.Auth";
+import { role } from "../constants/role";
+import type { TRole } from "../types";
 
 
 export const router = createBrowserRouter([
@@ -36,20 +39,14 @@ export const router = createBrowserRouter([
       path: "/verify",
    },
    {
-      Component: DasbordLayout,
+      Component: withAuth(DasbordLayout, role.superAdmin as TRole),
       path: "/admin",
-      children: [
-         {
-            Component: Analatis,
-            path: "analytics"
+      children:
+         [
+            {index: true, element: <Navigate to={"/admin/analytics"} />},
+            ...generateRoutes(adminSidebarItems)
 
-         },
-
-         {
-            Component: AddTour,
-            path: "add-tour"
-         }
-      ]
+         ],
 
 
 
@@ -61,12 +58,11 @@ export const router = createBrowserRouter([
       Component: DasbordLayout,
       path: "/user",
       children: [
-         {
-            Component: Bookinge,
-            path: "Bookinge"
 
-         }
+         { index: true, element: <Navigate to={"/user/bookings"} /> },
+         ...generateRoutes(userSidebarItems)
       ]
+      
 
 
 

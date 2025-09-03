@@ -70,12 +70,6 @@ export default function Verify() {
       }
    };
 
-   //! Needed - Turned off for development
-   //   useEffect(() => {
-   //     if (!email) {
-   //       navigate("/");
-   //     }
-   //   }, [email]);
 
    useEffect(() => {
       if (!email || !confirmed) return;
