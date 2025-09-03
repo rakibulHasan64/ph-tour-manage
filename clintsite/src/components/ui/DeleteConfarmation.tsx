@@ -13,13 +13,17 @@ import {
 
 
 interface IProps{
-   children: ReactNode
+   children: ReactNode;
+   onConfirm: () => void;
 }
 
-export function DeleteConfarmation({ children }: IProps) {
+export function DeleteConfarmation({ children, onConfirm }: IProps) {
 
    const handleConfaram = () => {
-      
+      onConfirm();
+      console.log("confaram click ");
+         
+
    }
    return (
       <AlertDialog>
@@ -36,7 +40,7 @@ export function DeleteConfarmation({ children }: IProps) {
             </AlertDialogHeader>
             <AlertDialogFooter>
                <AlertDialogCancel>Cancel</AlertDialogCancel>
-               <AlertDialogAction>Continue</AlertDialogAction>
+               <AlertDialogAction onClick={handleConfaram}>Continue</AlertDialogAction>
             </AlertDialogFooter>
          </AlertDialogContent>
       </AlertDialog>
