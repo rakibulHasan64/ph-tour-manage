@@ -1,4 +1,5 @@
-import { AddDivisonModal } from "../../components/modules/Adminmodules/Divison/AddDivisonModal";
+import { AddDivisionModal } from "../../components/modules/Adminmodules/Divison/AddDivisonModal";
+
 
 function AddDivition() {
    return (
@@ -6,7 +7,7 @@ function AddDivition() {
          
          <div className="">
             <h1>This is AddDivision Componet</h1>
-            <AddDivisonModal />
+            <AddDivisionModal />
          </div>
          
       </>

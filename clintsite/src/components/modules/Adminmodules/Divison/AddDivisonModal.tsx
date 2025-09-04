@@ -1,10 +1,6 @@
 
-
-
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
 
 import { toast } from "sonner";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../../../ui/dialog";
@@ -12,6 +8,8 @@ import { Button } from "../../../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../../ui/form";
 import { Input } from "../../../ui/input";
 import { Textarea } from "../../../ui/textarea";
+import SingleImageUploader from "../../../SingleImageUploader";
+import { useAddDivisionMutation } from "../../../../redux/featuer/divison/Divison.api";
 
 
 export function AddDivisionModal() {

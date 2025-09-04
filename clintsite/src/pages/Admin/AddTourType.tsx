@@ -1,6 +1,6 @@
 
 import { Trash2 } from "lucide-react";
-import { useDeletTourTypeMutation, useGetTourTypesQuery } from "../../redux/featuer/tour/tour.api";
+import {  useGetTourTypesQuery, useRemoveTourTypeMutation } from "../../redux/featuer/tour/tour.api";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { Button } from "../../components/ui/button";
 import { AddTourTypeModal } from "../../components/modules/Adminmodules/tourtype/AddTourTypeModal";
@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 export default function AddTourType() {
    const { data } = useGetTourTypesQuery(undefined);
-   const [removeTourType] = useDeletTourTypeMutation()
+   const [removeTourType] = useRemoveTourTypeMutation()
 
    const handleConfaramRemove = async (tourId: string) => {
       const tostId=toast.loading("Removing....")
@@ -30,7 +30,7 @@ export default function AddTourType() {
       }
    }
 
-   console.log(data);
+   
    
 
    return (
