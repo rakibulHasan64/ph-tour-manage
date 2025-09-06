@@ -5,7 +5,7 @@ export const divisionApi = baseApi.injectEndpoints({
    endpoints: (builder) => ({
       addDivision: builder.mutation({
          query: (divisionData) => ({
-            url: "/division/create",
+            url: "/division/create/",
             method: "POST",
             data: divisionData,
          }),

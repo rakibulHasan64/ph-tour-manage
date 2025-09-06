@@ -16,10 +16,15 @@ import { Button } from "../../components/ui/button";
 import { cn } from "../../lib/utils";
 import { format, formatISO } from "date-fns";
 import { useGetDivisionsQuery } from "../../redux/featuer/divison/Divison.api";
-import { useAddTourTypeMutation, useGetTourTypesQuery } from "../../redux/featuer/tour/tour.api";
+
 import { Calendar } from "../../components/ui/calendar";
 import { Textarea } from "../../components/ui/textarea";
+import { useAddTourMutation, useGetTourTypesQuery } from "../../redux/featuer/tour/tour.api";
 import MaltipleImageUploder from "../../components/MaltipleImageuploder";
+
+
+
+
 
 const formSchema = z.object({
    title: z.string().min(1, "Title is required"),
@@ -46,10 +51,7 @@ export default function AddTour() {
    const { data: divisionData, isLoading: divisionLoading } =
       useGetDivisionsQuery(undefined);
    const { data: tourTypeData } = useGetTourTypesQuery(undefined);
-
-   
-   
-   const [addTour] = useAddTourTypeMutation();
+   const [addTour] = useAddTourMutation();
 
    const divisionOptions = divisionData?.map(
       (item: { _id: string; name: string }) => ({
@@ -60,14 +62,50 @@ export default function AddTour() {
 
    const tourTypeOptions = tourTypeData?.map(
       (tourType: { _id: string; name: string }) => ({
-         value: tourType?._id,
-         label: tourType?.name,
+         value: tourType._id,
+         label: tourType.name,
       })
    );
-   console.log(" tourTypeOptions", tourTypeOptions);
+
    const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
-   
+      defaultValues: {
+         title: "Cox's Bazar Beach Adventure",
+         description:
+            "Experience the world's longest natural sea beach with golden sandy shores, crystal clear waters, and breathtaking sunsets. Enjoy beach activities, local seafood, and explore nearby attractions including Himchari National Park and Inani Beach.",
+         location: "Cox's Bazar",
+         costFrom: "15000",
+         startDate: new Date(),
+         endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days later
+         departureLocation: "Dhaka",
+         arrivalLocation: "Cox's Bazar",
+         included: [
+            { value: "Accommodation for 2 nights" },
+            { value: "All meals (breakfast, lunch, dinner)" },
+            { value: "Transportation (AC bus)" },
+            { value: "Professional tour guide" },
+         ],
+         excluded: [
+            { value: "Personal expenses" },
+            { value: "Extra activities not mentioned" },
+            { value: "Travel insurance" },
+         ],
+         amenities: [
+            { value: "Air-conditioned rooms" },
+            { value: "Free WiFi" },
+            { value: "Swimming pool access" },
+            { value: "Beach access" },
+         ],
+         tourPlan: [
+            { value: "Day 1: Arrival and beach exploration" },
+            { value: "Day 2: Himchari National Park visit" },
+            { value: "Day 3: Inani Beach and departure" },
+         ],
+         maxGuest: "25",
+         minAge: "5",
+         division: "",
+         tourType: "",
+      },
    });
 
    const {
@@ -124,19 +162,19 @@ export default function AddTour() {
          included:
             data.included[0].value === ""
                ? []
-               : data.included.map((item: { value: string }) => item.value),
+               : data.included?.map((item: { value: string }) => item.value),
          excluded:
             data.included[0].value === ""
                ? []
-               : data.excluded.map((item: { value: string }) => item.value),
+               : data.excluded?.map((item: { value: string }) => item.value),
          amenities:
             data.amenities[0].value === ""
                ? []
-               : data.amenities.map((item: { value: string }) => item.value),
+               : data.amenities?.map((item: { value: string }) => item.value),
          tourPlan:
             data.tourPlan[0].value === ""
                ? []
-               : data.tourPlan.map((item: { value: string }) => item.value),
+               : data.tourPlan?.map((item: { value: string }) => item.value),
       };
 
       const formData = new FormData();
@@ -146,6 +184,8 @@ export default function AddTour() {
 
       try {
          const res = await addTour(formData).unwrap();
+         console.log(res);
+         
 
          if (res.success) {
             toast.success("Tour created", { id: toastId });

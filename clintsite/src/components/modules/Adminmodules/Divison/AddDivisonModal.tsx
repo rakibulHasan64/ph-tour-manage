@@ -37,6 +37,9 @@ export function AddDivisionModal() {
 
       try {
          const res = await addDivision(formData).unwrap();
+
+         console.log("add devison data", res);
+         
          toast.success("Division Added");
          setOpen(false);
       } catch (err) {

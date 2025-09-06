@@ -6,9 +6,14 @@ import { Button } from "../../components/ui/button";
 import { AddTourTypeModal } from "../../components/modules/Adminmodules/tourtype/AddTourTypeModal";
 import { DeleteConfarmation } from "../../components/ui/DeleteConfarmation";
 import { toast } from "sonner";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../../components/ui/pagination";
+import { useState } from "react";
 
 export default function AddTourType() {
-   const { data } = useGetTourTypesQuery(undefined);
+
+
+   const [currentPage,setCurrentPage]=useState(1)
+   const { data } = useGetTourTypesQuery({ page: currentPage });
    const [removeTourType] = useRemoveTourTypeMutation()
 
    const handleConfaramRemove = async (tourId: string) => {
@@ -29,6 +34,9 @@ export default function AddTourType() {
          toast.success("Tour Remove")
       }
    }
+
+   console.log(data);
+   
 
    
    
@@ -68,6 +76,37 @@ export default function AddTourType() {
                </TableBody>
             </Table>
          </div>
+
+         <div className="flex justify-end"> 
+
+            <div className="">
+               <Pagination>
+                  <PaginationContent>
+                     <PaginationItem>
+                        <PaginationPrevious onClick={()=> setCurrentPage((prev)=> prev - 1)} className="pointer-events-none" />
+                     </PaginationItem>
+                     <PaginationItem>
+                        <PaginationLink href="#">1</PaginationLink>
+                     </PaginationItem>
+                     <PaginationItem>
+                        <PaginationEllipsis />
+                     </PaginationItem>
+                     <PaginationItem>
+                        <PaginationNext onClick={() => setCurrentPage((prev) => prev + 1)} />
+                     </PaginationItem>
+                  </PaginationContent>
+               </Pagination>
+            </div>
+
+         </div>
+
       </div>
    );
 }
+
+
+
+
+
+
+

@@ -11,6 +11,14 @@ import { userSidebarItems } from "./UserSidber";
 import { withAuth } from "../utils/with.Auth";
 import { role } from "../constants/role";
 import type { TRole } from "../types";
+import Tours from "../pages/user/Tours";
+// import TourDetails from "../pages/user/TourDetails";
+import Bookinge from "../pages/user/Bookinge";
+import TourDetails from "../pages/user/TourDetails";
+import Unauthorized from "../pages/Unauthorized";
+
+import Faile from "../pages/pyamant/Faile";
+import Pymantsucess from "../pages/pyamant/Pymantsucess";
 
 
 export const router = createBrowserRouter([
@@ -21,23 +29,28 @@ export const router = createBrowserRouter([
       children: [
          {
             Component: HomePage,
-            path: "about"
-         }
+            index: true
+         },
+         {
+            Component: Tours,
+            path: "tours"
+         },
+
+         {
+            Component: TourDetails,
+            path: "tours/:id"
+         },
+
+         
+
+         {
+            Component: Bookinge,
+            path: "booking/:id"
+         },
+
       ]
    },
-   {
-      Component: Login,
-      path: "/login"
-   },
-   {
-      Component: Register,
-      path: "/register"
-   },
-
-   {
-      Component: Verfiy,
-      path: "/verify",
-   },
+   
    {
       Component: withAuth(DasbordLayout, role.superAdmin as TRole),
       path: "/admin",
@@ -66,5 +79,40 @@ export const router = createBrowserRouter([
 
 
 
+   },
+
+
+
+
+
+   {
+      Component: Login,
+      path: "/login"
+   },
+   {
+      Component: Register,
+      path: "/register"
+   },
+   {
+      Component: Unauthorized,
+      path: "/unauthorized"
+   },
+
+   {
+      Component: Verfiy,
+      path: "/verify",
+   },
+
+   {
+      Component: Pymantsucess,
+      path: "/payment/success"
+   },
+
+   {
+
+      Component: Faile,
+      path: "/payment/cancel"
+
    }
+   
 ])

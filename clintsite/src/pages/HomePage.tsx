@@ -1,12 +1,10 @@
+import HeroSection from "./user/HeroSection";
 
-function HomePage() {
+
+export default function Homepage() {
    return (
-      <>
-         
-         <div className="">reyhw4t</div>
-         
-      </>
+      <div>
+         <HeroSection />
+      </div>
    );
 }
-
-export default HomePage;
