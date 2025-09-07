@@ -13,6 +13,7 @@ function CommanLayout({ children }: IProps) {
       <div className="min-h-screen flex flex-col">
 
          <Naver />
+         
    
          <div className="grid-1">
             {children}

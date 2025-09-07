@@ -15,7 +15,13 @@ export default function Tours() {
    const division = searchParams.get("division") || undefined;
    const tourType = searchParams.get("tourType") || undefined;
 
-   const { data } = useGetAllToursQuery({division,tourType});
+   const { data,isLoading,isError } = useGetAllToursQuery({ division, tourType });
+   
+
+   
+
+   if (isLoading) return <p>Loading...</p>;
+   if (isError) return <p>Error!</p>;
 
 
       

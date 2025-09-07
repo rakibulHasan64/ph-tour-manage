@@ -9,7 +9,7 @@ import AddDivition from "../pages/Admin/AddDivition";
 
 
 
-const  Analatis = lazy(() => import("../pages/Admin/Analatis"));
+const  Analatis = lazy(() => import("../pages/Admin/Analatis/Analatis"));
 
 export const adminSidebarItems: ISidebarItem[] = [
    {

@@ -1,6 +1,6 @@
 
 import config from "../config";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import type { AxiosRequestConfig } from "axios";
 
 export const axiosInstance = axios.create({

@@ -62,7 +62,23 @@ export const authApi = baseApi.injectEndpoints({
          providesTags: ["USER"]
          
       }),
+
+
+      AdminContulAlluser: builder.query({
+         query: (params) => ({
+            url: "/user/all-user",
+            method: "GET",
+            params
+
+         }),
+
+         providesTags: ["USER"]
+
+      }),
+
+
+      
    }),
 })
 
-export const { useRegisterMutation, useLoginMutation, useSendOtpMutation,useVerifyOtpMutation,useUserInfoQuery,useLogOutMutation } = authApi;
+export const { useRegisterMutation, useLoginMutation, useSendOtpMutation,useVerifyOtpMutation,useUserInfoQuery,useLogOutMutation,useAdminContulAlluserQuery } = authApi;

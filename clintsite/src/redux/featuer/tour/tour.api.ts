@@ -60,7 +60,7 @@ export const tourApi = baseApi.injectEndpoints({
             params: params,
          }),
          providesTags: ["TOUR"],
-         transformResponse: (response: IResponse<ITourPackage[]>) => response.data,
+         transformResponse: (response: IResponse<ITourPackage[]>) => response?.data,
       }),
 
 

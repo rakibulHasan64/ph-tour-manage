@@ -9,3 +9,10 @@ export interface IResponse<T> {
    message: string;
    data: T;
 }
+
+export enum Role {
+   SUPER_ADMIN = "SUPER_ADMIN",
+   ADMIN = "ADMIN",
+   USER = "USER",
+   GUIDE = "GUIDE",
+}
