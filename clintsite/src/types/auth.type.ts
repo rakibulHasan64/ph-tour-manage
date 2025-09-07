@@ -1,6 +1,6 @@
 
 
-export type { ISentOtp, ILogin, IOtpvery } from "./auth.type"
+export type { ISentOtp, ILogin, IOtpvery, } from "./auth.type"
 
 
 export interface IResponse<T> {
@@ -10,9 +10,22 @@ export interface IResponse<T> {
    data: T;
 }
 
+export interface IAuthProvider {
+  provider: "google" | "credentials";
+  providerId: string;
+}
+
+
+
+
+
+
 export enum Role {
    SUPER_ADMIN = "SUPER_ADMIN",
    ADMIN = "ADMIN",
    USER = "USER",
    GUIDE = "GUIDE",
 }
+
+
+

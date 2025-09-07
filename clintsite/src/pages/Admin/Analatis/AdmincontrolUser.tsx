@@ -5,19 +5,10 @@ import { Role } from '../../../types/auth.type';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '../../../components/ui/pagination';
 
 // Action dropdown menu
-const ActionMenu = ({ userId }) => {
+const ActionMenu = () => {
    const [isOpen, setIsOpen] = useState(false);
 
-   const handleEdit = () => {
-      console.log(`Edit user: ${userId}`);
-      setIsOpen(false);
-   };
-
-   const handleDelete = () => {
-      console.log(`Delete user: ${userId}`);
-      setIsOpen(false);
-   };
-
+   
    return (
       <div className="relative">
          <button
@@ -28,11 +19,11 @@ const ActionMenu = ({ userId }) => {
          </button>
          {isOpen && (
             <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-xl z-10">
-               <button onClick={handleEdit} className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+               <button  className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <Edit size={16} />
                   <span>Edit User</span>
                </button>
-               <button onClick={handleDelete} className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
+               <button  className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
                   <Trash2 size={16} />
                   <span>Delete User</span>
                </button>
@@ -54,8 +45,8 @@ function AdmincontrolUser() {
 
    // Search filter
    const filteredUsers = usersData?.data?.filter(user =>
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase())
+      user?.name.toLowerCase().includes(search.toLowerCase()) ||
+      user?.email.toLowerCase().includes(search.toLowerCase())
    );
 
    return (
@@ -153,7 +144,7 @@ function AdmincontrolUser() {
                               <div className="text-gray-500">{user.address}</div>
                            </td>
                            <td className="px-6 py-4 text-right">
-                              <ActionMenu userId={user._id} />
+                              <ActionMenu />
                            </td>
                         </tr>
                      ))}

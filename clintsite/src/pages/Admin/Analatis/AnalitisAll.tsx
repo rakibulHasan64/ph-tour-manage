@@ -72,6 +72,7 @@ const StatCard: React.FC<{
    </div>
 );
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CustomTooltip: React.FC<any> = ({ active, payload }) => {
    if (active && payload && payload.length) {
       return (
