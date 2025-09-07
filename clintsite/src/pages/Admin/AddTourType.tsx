@@ -6,14 +6,15 @@ import { Button } from "../../components/ui/button";
 import { AddTourTypeModal } from "../../components/modules/Adminmodules/tourtype/AddTourTypeModal";
 import { DeleteConfarmation } from "../../components/ui/DeleteConfarmation";
 import { toast } from "sonner";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../../components/ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../../components/ui/pagination";
 import { useState } from "react";
 
 export default function AddTourType() {
 
 
    const [currentPage,setCurrentPage]=useState(1)
-   const { data } = useGetTourTypesQuery({ page: currentPage });
+   const { data } = useGetTourTypesQuery({ page: currentPage, });
+   
    const [removeTourType] = useRemoveTourTypeMutation()
 
    const handleConfaramRemove = async (tourId: string) => {
@@ -29,13 +30,12 @@ export default function AddTourType() {
          console.log(error);
          
       }
-      const res = await removeTourType(tourId).unwrap()
-      if (res.success) {
-         toast.success("Tour Remove")
-      }
+      
    }
 
-   console.log(data);
+   const totalPage = data?.meta?.totalPage || 1;
+
+
    
 
    
@@ -56,7 +56,7 @@ export default function AddTourType() {
                   </TableRow>
                </TableHeader>
                <TableBody>
-                  {data?.map((item: {_id: string, name: string }) => (
+                  {data?.data?.map((item: {_id: string, name: string }) => (
                      <TableRow>
                         <TableCell className="font-medium w-full">
                            {item?.name}
@@ -83,14 +83,20 @@ export default function AddTourType() {
                <Pagination>
                   <PaginationContent>
                      <PaginationItem>
-                        <PaginationPrevious onClick={()=> setCurrentPage((prev)=> prev - 1)} className="pointer-events-none" />
+                        <PaginationPrevious onClick={()=> setCurrentPage((prev)=> prev - 1)} className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} />
                      </PaginationItem>
-                     <PaginationItem>
-                        <PaginationLink href="#">1</PaginationLink>
-                     </PaginationItem>
-                     <PaginationItem>
-                        <PaginationEllipsis />
-                     </PaginationItem>
+
+
+                     {
+                        Array?.from({ length: totalPage }, (_, index) => index + 1)?.map(page => (
+                           <PaginationItem  key={page} onClick={() => setCurrentPage(page)}>
+                              <PaginationLink >{page}</PaginationLink>
+                           </PaginationItem>
+                        ))
+                     }
+
+                     
+                     
                      <PaginationItem>
                         <PaginationNext onClick={() => setCurrentPage((prev) => prev + 1)} />
                      </PaginationItem>
