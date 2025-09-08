@@ -24,12 +24,12 @@ export default function HeroSection() {
       <section
          className=" overflow-hidden  bg-cover bg-center h-screen"
          style={{
-            backgroundImage: "url('/download.png')",
+            backgroundImage: "url('/pexels-asadphoto-1450340 (1).jpg')",
             opacity: 0.9,
             objectFit: "cover"
          }}
       >
-         
+   
 
          {/* Foreground content */}
          <div className="relative z-10 container mx-auto mt-44 mb-44">
@@ -44,13 +44,13 @@ export default function HeroSection() {
                         Explore the beauty of{" "}
                         <span className="text-primary">Bangladesh</span>
                      </h1>
-                     <p className="mx-auto max-w-3xl text-black lg:text-xl">
+                     <p className="mx-auto max-w-3xl text-white lg:text-xl">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Elig
                         doloremque mollitia fugiat omnis! Porro facilis quo animi
                         consequatur. Explicabo.
                      </p>
                   </div>
-                  <div className="mt-6 flex-col md:flex-row justify-center gap-7 space-y-3">
+                  <div className="mt-6 flex flex-col md:flex-row justify-center gap-7 space-y-3 md:space-y-0 z-50">
                      <Select onValueChange={(value) => setSelectedDivision(value)}>
                         <SelectTrigger className="w-[300px]">
                            <SelectValue />
@@ -70,13 +70,14 @@ export default function HeroSection() {
                      </Select>
 
                      {selectedDivision ? (
-                        <Button asChild>
+                        <Button asChild className="btn-primary">
                            <Link to={`/tours?division=${selectedDivision}`}>Search</Link>
                         </Button>
                      ) : (
                         <Button disabled>Search</Button>
                      )}
                   </div>
+
                </div>
             </div>
          </div>

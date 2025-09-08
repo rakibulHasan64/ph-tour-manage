@@ -1,7 +1,6 @@
 
 
 import { Link } from "react-router"
-import Logo from "../../assets/icon/Logo"
 import { Button } from "../../lib/button"
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "../ui/navigation-menu"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
@@ -149,7 +148,7 @@ export default function Naver() {
           {/* Main nav */}
           <div className="flex items-center gap-6">
             <a href="#" className="text-primary hover:text-primary/90">
-              <Logo />
+              <img className="w-35 h-29 object-cover" src="/Untitled design.png" alt="" />
             </a>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">

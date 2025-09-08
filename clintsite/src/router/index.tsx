@@ -19,6 +19,7 @@ import Unauthorized from "../pages/Unauthorized";
 
 import Faile from "../pages/pyamant/Faile";
 import Pymantsucess from "../pages/pyamant/Pymantsucess";
+import About from "../components/about/About";
 
 
 export const router = createBrowserRouter([
@@ -39,6 +40,11 @@ export const router = createBrowserRouter([
          {
             Component: TourDetails,
             path: "tours/:id"
+         },
+         {
+            Component: About,
+            path: "about"
+
          },
 
          
