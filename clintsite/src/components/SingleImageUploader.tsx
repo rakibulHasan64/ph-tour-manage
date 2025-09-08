@@ -3,7 +3,8 @@ import { AlertCircleIcon, ImageUpIcon, XIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useFileUpload } from "../hooks/use-file-upload";
 
-export default function SingleImageUploader({ onChange }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function SingleImageUploader({ onChange }: any) {
    const maxSizeMB = 5;
    const maxSize = maxSizeMB * 1024 * 1024; // 5MB default
 

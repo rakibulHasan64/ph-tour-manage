@@ -21,7 +21,7 @@ export default function Tours() {
          <div className="container mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-6 gap-6">
 
             {/* Sidebar (Desktop) */}
-            <div className="md:col-span-2 hidden md:block">
+            <div className="md:col-span-2 hidden md:block overflow-hidden sticky top-8 max-h-screen  overflow-y-auto">
                <TourFilet />
             </div>
 
@@ -34,11 +34,11 @@ export default function Tours() {
             </button>
 
             {/* Tours List */}
-            <div className="md:col-span-6 lg:col-span-4 w-full">
+            <div className="md:col-span-6 lg:col-span-4 w-full  overflow-y-auto ">
                {data?.map((item) => (
                   <div
                      key={item.slug}
-                     className="border border-muted rounded-2xl shadow-md overflow-hidden mb-6 flex flex-col md:flex-row"
+                     className="border border-muted rounded-2xl shadow-md overflow-hidden mb-6 flex flex-col md:flex-row "
                   >
                      {/* Image */}
                      <div className="w-full md:w-2/5 bg-gray-100 flex-shrink-0">

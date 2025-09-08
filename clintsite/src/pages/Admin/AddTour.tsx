@@ -22,8 +22,10 @@ import { Textarea } from "../../components/ui/textarea";
 import { useAddTourMutation, useGetTourTypesQuery } from "../../redux/featuer/tour/tour.api";
 import MaltipleImageUploder from "../../components/MaltipleImageuploder";
 
-
-
+interface IErrorResponse {
+   message: string;
+   data?: { message?: string };
+}
 
 
 const formSchema = z.object({

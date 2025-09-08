@@ -8,7 +8,6 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 const ActionMenu = () => {
    const [isOpen, setIsOpen] = useState(false);
 
-   
    return (
       <div className="relative">
          <button
@@ -19,11 +18,11 @@ const ActionMenu = () => {
          </button>
          {isOpen && (
             <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-xl z-10">
-               <button  className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+               <button className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <Edit size={16} />
                   <span>Edit User</span>
                </button>
-               <button  className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
+               <button className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
                   <Trash2 size={16} />
                   <span>Delete User</span>
                </button>
@@ -33,20 +32,32 @@ const ActionMenu = () => {
    );
 };
 
+interface IUser {
+   _id: string; // Backend অনুযায়ী _id
+   name: string;
+   email: string;
+   role: Role;
+   isActive: boolean;
+   isVerified: boolean;
+   phone?: string;
+   address?: string;
+}
+
 function AdmincontrolUser() {
-   const [currentPage, setCurrentPage] = useState(1)
+   const [currentPage, setCurrentPage] = useState(1);
    const [search, setSearch] = useState('');
-   const { data: usersData, isLoading, isError } = useAdminContulAlluserQuery({ page: currentPage, });
+   const { data: usersData, isLoading, isError } = useAdminContulAlluserQuery({ page: currentPage });
 
    const totalPage = usersData?.meta?.totalPage || 1;
 
    if (isLoading) return <p className="text-center py-10">Loading users...</p>;
    if (isError) return <p className="text-center py-10 text-red-500">Error loading users!</p>;
 
-   // Search filter
-   const filteredUsers = usersData?.data?.filter(user =>
-      user?.name.toLowerCase().includes(search.toLowerCase()) ||
-      user?.email.toLowerCase().includes(search.toLowerCase())
+   const users: IUser[] = usersData?.data || [];
+
+   const filteredUsers = users.filter((user: IUser) =>
+      user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase())
    );
 
    return (
@@ -92,96 +103,89 @@ function AdmincontrolUser() {
                      </tr>
                   </thead>
                   <tbody>
-                     {filteredUsers?.map((user) => (
-                        <tr key={user._id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                           <td className="px-6 py-4">
-                              <div className="flex items-center gap-3">
-                                 <img
-                                    className="w-10 h-10 rounded-full object-cover"
-                                    src={`https://ui-avatars.com/api/?name=${user.name.replace(' ', '+')}&background=random`}
-                                    alt={`${user.name}'s avatar`}
-                                 />
-                                 <div>
-                                    <p className="font-semibold text-gray-900 dark:text-white">{user.name}</p>
-                                    <p className="text-gray-500 dark:text-gray-400">{user.email}</p>
+                     {filteredUsers.length > 0 ? (
+                        filteredUsers.map((user: IUser) => (
+                           <tr key={user._id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                              <td className="px-6 py-4">
+                                 <div className="flex items-center gap-3">
+                                    <img
+                                       className="w-10 h-10 rounded-full object-cover"
+                                       src={`https://ui-avatars.com/api/?name=${user.name.replace(' ', '+')}&background=random`}
+                                       alt={`${user.name}'s avatar`}
+                                    />
+                                    <div>
+                                       <p className="font-semibold text-gray-900 dark:text-white">{user.name}</p>
+                                       <p className="text-gray-500 dark:text-gray-400">{user.email}</p>
+                                    </div>
                                  </div>
-                              </div>
-                           </td>
-                           <td className="px-6 py-4">
-                              {user.role === Role.ADMIN ? (
-                                 <span className="inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-purple-700 bg-purple-100 dark:text-purple-300 dark:bg-purple-900/20 rounded-full">
-                                    <Shield size={14} /> Admin
-                                 </span>
-                              ) : user.role === Role.SUPER_ADMIN ? (
-                                 <span className="inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-900/20 rounded-full">
-                                    <Shield size={14} /> Super Admin
-                                 </span>
-                              ) : user.role === Role.GUIDE ? (
-                                 <span className="inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 dark:text-blue-300 dark:bg-blue-900/20 rounded-full">
-                                    <User size={14} /> Guide
-                                 </span>
-                              ) : (
-                                 <span className="inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-gray-900/20 rounded-full">
-                                    <User size={14} /> User
-                                 </span>
-                              )}
-                           </td>
+                              </td>
+                              <td className="px-6 py-4">
+                                 {user.role === Role.ADMIN ? (
+                                    <span className="inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-purple-700 bg-purple-100 dark:text-purple-300 dark:bg-purple-900/20 rounded-full">
+                                       <Shield size={14} /> Admin
+                                    </span>
+                                 ) : user.role === Role.SUPER_ADMIN ? (
+                                    <span className="inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-900/20 rounded-full">
+                                       <Shield size={14} /> Super Admin
+                                    </span>
+                                 ) : user.role === Role.GUIDE ? (
+                                    <span className="inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 dark:text-blue-300 dark:bg-blue-900/20 rounded-full">
+                                       <User size={14} /> Guide
+                                    </span>
+                                 ) : (
+                                    <span className="inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-gray-900/20 rounded-full">
+                                       <User size={14} /> User
+                                    </span>
+                                 )}
+                              </td>
 
-                           <td className="px-6 py-4">
-                              <span className={`px-2 py-1 text-xs font-semibold rounded-full ${user.isActive ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'}`}>
-                                 {user.isActive ? 'Active' : 'Inactive'}
-                              </span>
-                           </td>
-                           <td className="px-6 py-4">
-                              {user.isVerified ? (
-                                 <CheckCircle size={20} className="text-green-500" />
-                              ) : (
-                                 <XCircle size={20} className="text-red-500" />
-                              )}
-                           </td>
-                           <td className="px-6 py-4">
-                              <div className="font-medium">{user.phone}</div>
-                              <div className="text-gray-500">{user.address}</div>
-                           </td>
-                           <td className="px-6 py-4 text-right">
-                              <ActionMenu />
+                              <td className="px-6 py-4">
+                                 <span className={`px-2 py-1 text-xs font-semibold rounded-full ${user.isActive ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'}`}>
+                                    {user.isActive ? 'Active' : 'Inactive'}
+                                 </span>
+                              </td>
+                              <td className="px-6 py-4">
+                                 {user.isVerified ? <CheckCircle size={20} className="text-green-500" /> : <XCircle size={20} className="text-red-500" />}
+                              </td>
+                              <td className="px-6 py-4">
+                                 <div className="font-medium">{user.phone || '-'}</div>
+                                 <div className="text-gray-500">{user.address || '-'}</div>
+                              </td>
+                              <td className="px-6 py-4 text-right">
+                                 <ActionMenu />
+                              </td>
+                           </tr>
+                        ))
+                     ) : (
+                        <tr>
+                           <td colSpan={6} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                              No users found.
                            </td>
                         </tr>
-                     ))}
-
-                     
-
-
+                     )}
                   </tbody>
                </table>
-               <div className="">
+
+               {/* Pagination */}
+               <div className="mt-4">
                   <Pagination>
                      <PaginationContent>
                         <PaginationItem>
-                           <PaginationPrevious onClick={() => setCurrentPage((prev) => prev - 1)} className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} />
+                           <PaginationPrevious onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'} />
                         </PaginationItem>
 
-
-                        {
-                           Array?.from({ length: totalPage }, (_, index) => index + 1)?.map(page => (
-                              <PaginationItem key={page} onClick={() => setCurrentPage(page)}>
-                                 <PaginationLink >{page}</PaginationLink>
-                              </PaginationItem>
-                           ))
-                        }
-
-
+                        {Array.from({ length: totalPage }, (_, i) => i + 1).map(page => (
+                           <PaginationItem key={page} onClick={() => setCurrentPage(page)}>
+                              <PaginationLink>{page}</PaginationLink>
+                           </PaginationItem>
+                        ))}
 
                         <PaginationItem>
-                           <PaginationNext onClick={() => setCurrentPage((prev) => prev + 1)} />
+                           <PaginationNext onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPage))} />
                         </PaginationItem>
                      </PaginationContent>
                   </Pagination>
                </div>
-
-               {filteredUsers?.length === 0 && (
-                  <p className="text-center py-4 text-gray-500 dark:text-gray-400">No users found.</p>
-               )}
             </div>
          </div>
       </div>

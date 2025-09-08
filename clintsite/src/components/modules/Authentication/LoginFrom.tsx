@@ -9,6 +9,13 @@ import { toast } from "sonner";
 import { useLoginMutation } from "../../../redux/featuer/auth/auth.api";
 import config from "../../../config";
 
+interface IErrorResponse {
+   data: {
+      message: string;
+   };
+}
+
+
 function LoginFrom({
    className,
    ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -25,14 +32,15 @@ function LoginFrom({
             toast.success("Logged in successfully");
             navigate("/");
          }
-      } catch (err) {
+      } catch (err: unknown ) {
          console.error(err);
+         const error = err as IErrorResponse;
 
-         if (err.data.message === "Password does not match") {
+         if (error.data.message === "Password does not match") {
             toast.error("Invalid credentials");
          }
 
-         if (err.data.message === "User is not verified") {
+         if (error.data.message === "User is not verified") {
             toast.error("Your account is not verified");
             navigate("/verify", { state: data.email });
          }

@@ -3,28 +3,41 @@ import { AddDivisionModal } from "../../components/modules/Adminmodules/Divison/
 import { useDeleteDivisionMutation, useGetDivisionsQuery } from "../../redux/featuer/divison/Divison.api";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../../components/ui/pagination";
 
-
-
 export interface IDivision {
+   _id: string; 
    name: string;
    slug: string;
    thumbnail?: string;
-   description?: string
-
+   description?: string;
+   createdAt: string; 
 }
 
+
+// interface IDivisionResponse {
+//    data: IDivision[];
+//    meta?: {
+//       totalPage?: number;
+//    };
+// }
+
 function AddDivision() {
-   const [currentPage,setCurrentPage]=useState(1)
-   const { data: divisions, isLoading, error } = useGetDivisionsQuery({ page: currentPage, });
+   const [currentPage, setCurrentPage] = useState(1);
+   const { data: divisionsResponse, isLoading, error } = useGetDivisionsQuery({ page: currentPage });
+   console.log("Divison", divisionsResponse);
+   
    const [deleteDivision] = useDeleteDivisionMutation();
-   const [selectedDivision, setSelectedDivision] = useState(null);
+   const [selectedDivision, setSelectedDivision] = useState<IDivision | null>(null);
    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
    const [searchTerm, setSearchTerm] = useState("");
 
+   // divisions array
+   const divisions: IDivision[] = divisionsResponse || [];
+   const totalPage = divisionsResponse?.meta?.totalPage || 1;
+   console.log(totalPage, "divusib");
+   
 
-   const totalPage = divisions?.meta?.totalPage || 1;
-
-   const handleDelete = async (id) => {
+   // ✅ Delete handler
+   const handleDelete = async (id: string) => {
       if (window.confirm("Are you sure you want to delete this division?")) {
          try {
             await deleteDivision(id).unwrap();
@@ -36,19 +49,18 @@ function AddDivision() {
       }
    };
 
-   const handleEdit = (division) => {
+   // ✅ Edit handler
+   const handleEdit = (division: IDivision) => {
       setSelectedDivision(division);
       setIsEditModalOpen(true);
    };
 
-   // Filter divisions based on search term
-   const filteredDivisions = divisions
-      ? divisions.filter((division) =>
-         division.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         division.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         division.slug.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      : [];
+   // ✅ Filter divisions based on search term
+   const filteredDivisions = divisions.filter((division: IDivision) =>
+      division.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (division.description?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
+      division.slug.toLowerCase().includes(searchTerm.toLowerCase())
+   );
 
    if (isLoading) {
       return (
@@ -92,14 +104,12 @@ function AddDivision() {
                <p className="text-gray-600">Manage your organization's divisions and departments</p>
             </div>
 
-            {/* Stats and Actions Card */}
+            {/* Stats and Actions */}
             <div className="bg-white rounded-xl shadow-md p-6 mb-6">
                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                   <div>
                      <h2 className="text-xl font-semibold text-gray-800">All Divisions</h2>
-                     <p className="text-gray-600">
-                        {divisions ? `${divisions.length} division(s) found` : 'No divisions available'}
-                     </p>
+                     <p className="text-gray-600">{divisions.length} division(s) found</p>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
@@ -122,43 +132,27 @@ function AddDivision() {
                </div>
             </div>
 
-            {/* Table Card */}
+            {/* Table */}
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
                <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
                      <thead className="bg-gray-50">
                         <tr>
-                           <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Thumbnail
-                           </th>
-                           <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Name
-                           </th>
-                           <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Description
-                           </th>
-                           <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Slug
-                           </th>
-                           <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Created At
-                           </th>
-                           <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Actions
-                           </th>
+                           <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thumbnail</th>
+                           <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                           <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                           <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
+                           <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                           <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                      </thead>
                      <tbody className="bg-white divide-y divide-gray-200">
                         {filteredDivisions.length > 0 ? (
-                           filteredDivisions.map((division) => (
+                           filteredDivisions.map((division: IDivision) => (
                               <tr key={division._id} className="hover:bg-blue-50 transition-colors duration-150">
                                  <td className="px-6 py-4 whitespace-nowrap">
                                     {division.thumbnail ? (
-                                       <img
-                                          src={division.thumbnail}
-                                          alt={division.name}
-                                          className="h-12 w-12 object-cover rounded-lg shadow-sm"
-                                       />
+                                       <img src={division.thumbnail} alt={division.name} className="h-12 w-12 object-cover rounded-lg shadow-sm" />
                                     ) : (
                                        <div className="h-12 w-12 bg-gray-100 rounded-lg flex items-center justify-center">
                                           <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -171,42 +165,20 @@ function AddDivision() {
                                     <div className="text-sm font-semibold text-gray-900">{division.name}</div>
                                  </td>
                                  <td className="px-6 py-4">
-                                    <div className="text-sm text-gray-600 max-w-xs truncate">
-                                       {division.description || "No description provided"}
-                                    </div>
+                                    <div className="text-sm text-gray-600 max-w-xs truncate">{division.description || "No description provided"}</div>
                                  </td>
                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded-md inline-block">
-                                       {division.slug}
-                                    </div>
+                                    <div className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded-md inline-block">{division.slug}</div>
                                  </td>
                                  <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-600">
-                                       {new Date(division.createdAt).toLocaleDateString('en-US', {
-                                          year: 'numeric',
-                                          month: 'short',
-                                          day: 'numeric'
-                                       })}
-                                    </div>
+                                    <div className="text-sm text-gray-600">{new Date(division.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
                                  </td>
                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div className="flex space-x-2">
-                                       <button
-                                          onClick={() => handleEdit(division)}
-                                          className="text-blue-600 hover:text-blue-800 transition-colors flex items-center"
-                                       >
-                                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                          </svg>
+                                       <button onClick={() => handleEdit(division)} className="text-blue-600 hover:text-blue-800 transition-colors flex items-center">
                                           Edit
                                        </button>
-                                       <button
-                                          onClick={() => handleDelete(division._id)}
-                                          className="text-red-600 hover:text-red-800 transition-colors flex items-center"
-                                       >
-                                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                          </svg>
+                                       <button onClick={() => handleDelete(division._id)} className="text-red-600 hover:text-red-800 transition-colors flex items-center">
                                           Delete
                                        </button>
                                     </div>
@@ -215,15 +187,13 @@ function AddDivision() {
                            ))
                         ) : (
                            <tr>
-                              <td colSpan="6" className="px-6 py-8 text-center">
+                              <td colSpan={6} className="px-6 py-8 text-center">
                                  <div className="flex flex-col items-center justify-center text-gray-500">
                                     <svg className="h-12 w-12 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                     <p className="text-lg font-medium">No divisions found</p>
-                                    <p className="mt-1">
-                                       {searchTerm ? 'Try adjusting your search term' : 'Get started by adding your first division'}
-                                    </p>
+                                    <p className="mt-1">{searchTerm ? 'Try adjusting your search term' : 'Get started by adding your first division'}</p>
                                  </div>
                               </td>
                            </tr>
@@ -240,53 +210,34 @@ function AddDivision() {
                      <h2 className="text-xl font-bold mb-4 text-gray-800">Edit Division</h2>
                      <p className="text-gray-600 mb-4">Edit functionality would be implemented here.</p>
                      <div className="flex justify-end space-x-3">
-                        <button
-                           onClick={() => setIsEditModalOpen(false)}
-                           className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                        >
-                           Cancel
-                        </button>
-                        <button
-                           onClick={() => {
-                              // Handle update logic here
-                              setIsEditModalOpen(false);
-                           }}
-                           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                           Save Changes
-                        </button>
+                        <button onClick={() => setIsEditModalOpen(false)} className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">Cancel</button>
+                        <button onClick={() => setIsEditModalOpen(false)} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Save Changes</button>
                      </div>
                   </div>
                </div>
             )}
-         </div>
 
+            {/* Pagination */}
+            <div className="">
+               <Pagination>
+                  <PaginationContent>
+                     <PaginationItem>
+                        <PaginationPrevious onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} />
+                     </PaginationItem>
 
-         <div className="">
-            <Pagination>
-               <PaginationContent>
-                  <PaginationItem>
-                     <PaginationPrevious onClick={() => setCurrentPage((prev) => prev - 1)} className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} />
-                  </PaginationItem>
-
-
-                  {
-                     Array?.from({ length: totalPage }, (_, index) => index + 1)?.map(page => (
+                     {Array.from({ length: totalPage }, (_, index) => index + 1).map(page => (
                         <PaginationItem key={page} onClick={() => setCurrentPage(page)}>
-                           <PaginationLink >{page}</PaginationLink>
+                           <PaginationLink>{page}</PaginationLink>
                         </PaginationItem>
-                     ))
-                  }
+                     ))}
 
-
-
-                  <PaginationItem>
-                     <PaginationNext onClick={() => setCurrentPage((prev) => prev + 1)} />
-                  </PaginationItem>
-               </PaginationContent>
-            </Pagination>
+                     <PaginationItem>
+                        <PaginationNext onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPage))} />
+                     </PaginationItem>
+                  </PaginationContent>
+               </Pagination>
+            </div>
          </div>
-
       </div>
    );
 }

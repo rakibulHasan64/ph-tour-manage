@@ -26,7 +26,8 @@ export function AddDivisionModal() {
       },
    });
 
-   const onSubmit = async (data) => {
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   const onSubmit = async (data: any) => {
       const formData = new FormData();
 
       formData.append("data", JSON.stringify(data));

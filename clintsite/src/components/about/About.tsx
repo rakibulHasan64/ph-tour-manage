@@ -3,12 +3,13 @@
 import { useEffect } from 'react';
 import CountUp from 'react-countup';
 import { Users, HeartHandshake, ShieldCheck } from 'lucide-react';
-import AOS from 'aos';
+
 import 'aos/dist/aos.css';
+import Aos from 'aos';
 
 function About() {
    useEffect(() => {
-      AOS.init({
+      Aos.init({
          duration: 1000,
          once: true,
       });

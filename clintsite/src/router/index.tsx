@@ -20,6 +20,10 @@ import Unauthorized from "../pages/Unauthorized";
 import Faile from "../pages/pyamant/Faile";
 import Pymantsucess from "../pages/pyamant/Pymantsucess";
 import About from "../components/about/About";
+import ForgetPassword from "../pages/authpassword/ForgetPassword";
+import ReesetPaswword from "../pages/authpassword/ReesetPaswword";
+import SetPassword from "../pages/authpassword/SetPassword";
+import ChangePassword from "../pages/authpassword/ChangePassword";
 
 
 export const router = createBrowserRouter([
@@ -107,6 +111,29 @@ export const router = createBrowserRouter([
    {
       Component: Verfiy,
       path: "/verify",
+   },
+   {
+
+      Component: ForgetPassword,
+      path: "/Forgot-Password"
+
+   },
+
+   {  
+      Component: ReesetPaswword,
+      path: "/reset-password",
+      errorElement: <h1 className="text-red-500">Page Not Found 😢</h1>, // custom error
+   },
+   {
+      Component: SetPassword,
+      path: "/Set-Password"
+
+   },
+
+   {
+      Component: ChangePassword,
+      path: "/Change-Password"
+
    },
 
    {

@@ -13,7 +13,7 @@ export default function Password({ ...field }) {
   const toggleVisibility = () => setIsVisible((prevState) => !prevState)
 
   return (
-    <div className="*:not-first:mt-2">
+    <div className="*:not-first:mt-2 max-w-5xl mx-auto mt-10">
       <Label htmlFor={id}>Show/hide password input</Label>
       <div className="relative">
         <Input

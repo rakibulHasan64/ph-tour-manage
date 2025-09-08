@@ -207,7 +207,7 @@ export default function BookingPage() {
 
                   {/* Right Section - Booking Card */}
                   <div className="w-full lg:w-96">
-                     <div className="bg-white rounded-2xl p-6 shadow-lg sticky top-6 border border-gray-100">
+                     <div className="bg-white rounded-2xl p-6 shadow-lg to border border-gray-100">
                         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Complete Your Booking</h2>
 
                         <div className="space-y-6">

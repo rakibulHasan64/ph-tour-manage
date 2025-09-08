@@ -8,7 +8,6 @@ function Gallery() {
          id: 1,
          title: "Mountain Adventure",
          location: "Swiss Alps",
-         price: "$899",
          duration: "7 days",
          category: "adventure",
          image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
@@ -17,7 +16,7 @@ function Gallery() {
          id: 2,
          title: "Beach Paradise",
          location: "Maldives",
-         price: "$1,299",
+
          duration: "5 days",
          category: "beach",
          image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
@@ -26,7 +25,6 @@ function Gallery() {
          id: 3,
          title: "Cultural Journey",
          location: "Kyoto, Japan",
-         price: "$1,099",
          duration: "10 days",
          category: "cultural",
          image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
@@ -44,19 +42,19 @@ function Gallery() {
          id: 5,
          title: "City Explorer",
          location: "New York, USA",
-         price: "$799",
+      
          duration: "4 days",
          category: "urban",
-         image: "https://images.unsplash.com/photo-1502602898536-47ad22581b52?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+         image: "https://i.ibb.co.com/79QptdB/b.jpg"
       },
       {
          id: 6,
          title: "Island Getaway",
          location: "Santorini, Greece",
-         price: "$1,199",
+   
          duration: "6 days",
          category: "beach",
-         image: "https://images.unsplash.com/photo-1536459232331-91f5df10ff54?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+         image: "https://i.ibb.co.com/WWHdV8WG/aeri.jpg"
       }
    ];
 
@@ -114,9 +112,7 @@ function Gallery() {
                               alt={tour.title}
                               className="w-full h-full object-cover"
                            />
-                           <div className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                              {tour.price}
-                           </div>
+                        
                         </div>
                         <div className="p-6">
                            <h3 className="text-xl font-bold text-gray-800 mb-2">{tour.title}</h3>

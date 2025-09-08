@@ -36,7 +36,7 @@ export const adminSidebarItems: ISidebarItem[] = [
             component: AddDivition,
          },
          {
-            title: "Habi Jabi",
+            title: "AddTour",
             url: "/admin/habijabi",
             component: AddTour,
          },
