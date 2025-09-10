@@ -2,7 +2,7 @@
 import { ITour, ITourType } from "./tour.interface";
 import { Tour, TourType } from "./tour.module";
 import { QueryBuilder } from "../../utils/queryBlider";
-import { tourSearchableFields } from "./tour.constant";
+import { tourSearchableFields, tourTypeSearchableFields } from "./tour.constant";
 import { deleteImageFromCLoudinary } from "../../config/cloudnery.config";
 
 const createTour = async (payload: ITour) => {
@@ -43,16 +43,13 @@ const getAllTours = async (query: Record<string, string>) => {
         .fields()
         .paginate()
     
-    const [data, mata] = await Promise.all([
+    const [data, meta] = await Promise.all([
         tours.build(),
         queryBuilder.getMeta()
     ])
 
-    return {
-        data,
-        mata
-    }
-     
+    return { data, meta }
+
 
 
 
@@ -118,8 +115,25 @@ const createTourType = async (payload: ITourType) => {
 };
 
 
-const getAllTourTypes = async () => {
-    return await TourType.find();
+const getAllTourTypes = async (query: Record<string, string>) => {
+    const queryBlider = new QueryBuilder(TourType.find(), query)
+     
+    const tourTypes = await queryBlider
+        .search(tourTypeSearchableFields)
+        .sort()
+        .fields()
+        .paginate()
+
+    const [data, meta] = await Promise.all([
+        tourTypes.build(),
+        queryBlider.getMeta()
+    ])
+
+    return {
+        data,
+        meta
+    }
+    
 };
 
 const deleteTourType = async (id: string) => {

@@ -48,7 +48,7 @@ const getAllTours = catchAsync(async (req: Request, res: Response) => {
         success: true,
         message: 'Tour all get successfully',
         data: result.data,
-        meta: result.mata
+        meta: result.meta
     });
 });
 
@@ -87,13 +87,20 @@ const deleteTour = catchAsync(async (req: Request, res: Response) => {
 
 
 const getAllTourTypes = catchAsync(async (req: Request, res: Response) => {
-    const result = await TourService.getAllTourTypes();
+    const query = req.query;
+    
+
+    const result = await TourService.getAllTourTypes(query as Record<string, string>);
+
+
+    
 
     sendResponse(res, {
         statusCode: 201,
         success: true,
         message: 'Tour all successfully',
-        data: result
+        data: result,
+        
     
     });
 });
@@ -133,13 +140,15 @@ const deleteTourType = catchAsync(async (req: Request, res: Response) => {
     const result = await TourService.deleteTourType(id)
 
     sendResponse(res, {
-        statusCode: 201,
+        statusCode: 200,
         success: true,
-        message: 'deleteTourType delated successfully',
+        message: 'Tour type deleted successfully',
         data: result
-    
     });
+
 });
+
+
 
 
 

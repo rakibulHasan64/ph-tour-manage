@@ -21,7 +21,10 @@ const initPyment = catchAsync(async (req: Request, res: Response) => {
 
 
 const successPymants = catchAsync(async (req: Request, res: Response) => {
-   const query = req.query;
+    const query = req.query;
+    
+
+    
    const result = await PymantService.successPayment(query as Record<string, string>)
    
    if (result.success) {
@@ -71,8 +74,6 @@ const getInvoiceDownload = catchAsync(
 
 const validatePayment= catchAsync(
    async (req: Request, res: Response) => {
-      // eslint-disable-next-line no-console
-      console.log("sslComarz ipn url body", req.body);
       
        
          await SSLService.validatePaymant(req.body);

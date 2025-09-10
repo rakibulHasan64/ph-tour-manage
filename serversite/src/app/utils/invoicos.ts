@@ -1,6 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-console */
+
 import PDFDocument from "pdfkit";
 import AppError from "../errorHelpers/AppError";
+
 
 
 export interface IInvoiceData {
@@ -42,9 +44,11 @@ export const generatePdf = async (invoiceData: IInvoiceData): Promise<Buffer<Arr
 
         })
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-        // eslint-disable-next-line no-console
+        
         console.log(error);
         throw new AppError(401, `Pdf creation error ${error.message}`)
     }
 }
+

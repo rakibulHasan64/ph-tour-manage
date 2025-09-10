@@ -24,7 +24,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
 
   try {
   
-    const user = await User.findById(userId).session(session)
+    const user = await User.findById(userId)
 
     if (!user?.phone || !user.address) {
       throw new AppError(httpStatus.BAD_REQUEST, "Please Update Your Profile to Book a Tour.")
@@ -79,8 +79,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
 
         const sslPayment = await SSLService.sslPaymantInit(sslPayload)
 
-        // eslint-disable-next-line no-console
-        console.log(sslPayment);
+      
 
         await session.commitTransaction(); //transaction
         session.endSession()

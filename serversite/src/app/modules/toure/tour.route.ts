@@ -16,7 +16,7 @@ router.post("/create-tour-type", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), valida
     )
 router.patch("/tour-type/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), validateRequest(createTourTypeZodSchema), TourController.updateTourType)
 
-router.delete("tour-types/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), multerUpload.array("files"), validateRequest(createTourTypeZodSchema), TourController.deleteTourType)
+router.delete("/tour-types/:id", checkAuth(Role.ADMIN, Role.SUPER_ADMIN), TourController.deleteTourType)
 
 
 /* --------------------- TOUR ROUTES ---------------------- */

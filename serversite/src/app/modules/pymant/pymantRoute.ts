@@ -10,12 +10,12 @@ import { Role } from "../user/user.interface";
 const router = express.Router();
 
 
-router.post("/init-pyament:bookingId", PymantCallation.initPyment)
+router.post("/init-payment/:bookingId", PymantCallation.initPyment)
 router.post("/success", PymantCallation.successPymants)
 router.post("/fail", PymantCallation.failPymants)
 router.post("/cancel", PymantCallation.cancelPymants)
 
-router.get("/invoice/:pymantId", checkAuth(...Object.values(Role)), PymantCallation.getInvoiceDownload)
+router.get("/invoice/:paymantId", checkAuth(...Object.values(Role)), PymantCallation.getInvoiceDownload)
 
 router.post("/validate-payment", PymantCallation.validatePayment)
 

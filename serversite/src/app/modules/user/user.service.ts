@@ -99,27 +99,30 @@ const updatedUser = async (userId: string, payload: Partial<IUser>, decodedToken
    return newUpdatedUser
 }
 
-
 const getAllUsers = async (query: Record<string, string>) => {
-   
    const queryBuilder = new QueryBuilder(User.find(), query)
-   const usersData = queryBuilder
       .filter()
       .search(userSearchableFields)
       .sort()
       .fields()
       .paginate();
 
+   const usersQuery = queryBuilder.build().select(
+      "_id name email role phone address auths createdAt updatedAt isDeleted isActive isVerified"
+   );
+
+   // data এবং meta একসাথে আনা হচ্ছে
    const [data, meta] = await Promise.all([
-      usersData.build(),
+      usersQuery,
       queryBuilder.getMeta()
-   ])
+   ]);
 
    return {
       data,
       meta
-   }
+   };
 };
+
 
 
 
