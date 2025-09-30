@@ -13,7 +13,7 @@ const router = (0, express_1.Router)();
 router.get("/tour-types", tour_contller_1.TourController.getAllTourTypes);
 router.post("/create-tour-type", (0, chakAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), (0, validreqat_1.validateRequest)(tour_valdition_1.createTourTypeZodSchema), tour_contller_1.TourController.createTourType);
 router.patch("/tour-type/:id", (0, chakAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), (0, validreqat_1.validateRequest)(tour_valdition_1.createTourTypeZodSchema), tour_contller_1.TourController.updateTourType);
-router.delete("tour-types/:id", (0, chakAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), multer_config_1.multerUpload.array("files"), (0, validreqat_1.validateRequest)(tour_valdition_1.createTourTypeZodSchema), tour_contller_1.TourController.deleteTourType);
+router.delete("/tour-types/:id", (0, chakAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), tour_contller_1.TourController.deleteTourType);
 /* --------------------- TOUR ROUTES ---------------------- */
 router.get("/", tour_contller_1.TourController.getAllTours);
 router.post("/create", (0, chakAuth_1.checkAuth)(user_interface_1.Role.ADMIN, user_interface_1.Role.SUPER_ADMIN), multer_config_1.multerUpload.array("files"), (0, validreqat_1.validateRequest)(tour_valdition_1.createTourZodSchema), tour_contller_1.TourController.createTour);

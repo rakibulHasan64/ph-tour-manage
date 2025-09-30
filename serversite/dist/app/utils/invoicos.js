@@ -1,4 +1,5 @@
 "use strict";
+/* eslint-disable no-console */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generatePdf = void 0;
-/* eslint-disable @typescript-eslint/no-explicit-any */
 const pdfkit_1 = __importDefault(require("pdfkit"));
 const AppError_1 = __importDefault(require("../errorHelpers/AppError"));
 const generatePdf = (invoiceData) => __awaiter(void 0, void 0, void 0, function* () {
@@ -38,9 +38,9 @@ const generatePdf = (invoiceData) => __awaiter(void 0, void 0, void 0, function*
             doc.text("Thank you for booking with us!", { align: "center" });
             doc.end();
         });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }
     catch (error) {
-        // eslint-disable-next-line no-console
         console.log(error);
         throw new AppError_1.default(401, `Pdf creation error ${error.message}`);
     }

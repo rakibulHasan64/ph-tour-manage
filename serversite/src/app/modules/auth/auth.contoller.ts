@@ -44,7 +44,7 @@ const credentialsLogin = catchAsync(async (req: Request, res: Response, next: Ne
          user: rest,
        },
      });
-  })(req, res, next); // ✅ Correct order
+  })(req, res, next); 
 });
 
 

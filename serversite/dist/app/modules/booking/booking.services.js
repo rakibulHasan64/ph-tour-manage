@@ -29,7 +29,7 @@ const createBooking = (payload, userId) => __awaiter(void 0, void 0, void 0, fun
     const session = yield booking_model_1.Booking.startSession();
     session.startTransaction();
     try {
-        const user = yield user_module_1.User.findById(userId).session(session);
+        const user = yield user_module_1.User.findById(userId);
         if (!(user === null || user === void 0 ? void 0 : user.phone) || !user.address) {
             throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Please Update Your Profile to Book a Tour.");
         }
@@ -63,8 +63,6 @@ const createBooking = (payload, userId) => __awaiter(void 0, void 0, void 0, fun
             transactionId: transactionId
         };
         const sslPayment = yield sslcomarz_servise_1.SSLService.sslPaymantInit(sslPayload);
-        // eslint-disable-next-line no-console
-        console.log(sslPayment);
         yield session.commitTransaction(); //transaction
         session.endSession();
         return {

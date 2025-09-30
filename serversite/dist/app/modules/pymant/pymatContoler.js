@@ -57,8 +57,6 @@ const getInvoiceDownload = (0, catchAsyn_1.catchAsync)((req, res) => __awaiter(v
     });
 }));
 const validatePayment = (0, catchAsyn_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // eslint-disable-next-line no-console
-    console.log("sslComarz ipn url body", req.body);
     yield sslcomarz_servise_1.SSLService.validatePaymant(req.body);
     (0, sendRespons_1.sendResponse)(res, {
         statusCode: 200,

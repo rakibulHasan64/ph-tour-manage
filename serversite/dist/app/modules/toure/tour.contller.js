@@ -47,7 +47,7 @@ const getAllTours = (0, catchAsyn_1.catchAsync)((req, res) => __awaiter(void 0, 
         success: true,
         message: 'Tour all get successfully',
         data: result.data,
-        meta: result.mata
+        meta: result.meta
     });
 }));
 const updateTour = (0, catchAsyn_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -71,12 +71,13 @@ const deleteTour = (0, catchAsyn_1.catchAsync)((req, res) => __awaiter(void 0, v
     });
 }));
 const getAllTourTypes = (0, catchAsyn_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield tour_sercvic_1.TourService.getAllTourTypes();
+    const query = req.query;
+    const result = yield tour_sercvic_1.TourService.getAllTourTypes(query);
     (0, sendRespons_1.sendResponse)(res, {
         statusCode: 201,
         success: true,
         message: 'Tour all successfully',
-        data: result
+        data: result,
     });
 }));
 const createTourType = (0, catchAsyn_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -104,9 +105,9 @@ const deleteTourType = (0, catchAsyn_1.catchAsync)((req, res) => __awaiter(void 
     const { id } = req.params;
     const result = yield tour_sercvic_1.TourService.deleteTourType(id);
     (0, sendRespons_1.sendResponse)(res, {
-        statusCode: 201,
+        statusCode: 200,
         success: true,
-        message: 'deleteTourType delated successfully',
+        message: 'Tour type deleted successfully',
         data: result
     });
 }));

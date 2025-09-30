@@ -125,8 +125,6 @@ const getAllUsers = async (query: Record<string, string>) => {
 
 
 
-
-
 const getSingelUser = async (userId: string)=>{
    const user = await User.findById(userId).select("-password")
    return {

@@ -67,17 +67,14 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
     try {
         const email = (_a = profile.emails) === null || _a === void 0 ? void 0 : _a[0].value;
         if (!email) {
-            return done(null, false, { mesaage: "No email found" });
+            return done(null, false, { message: "No email found" });
         }
         let isUserExist = yield user_module_1.User.findOne({ email });
         if (isUserExist && !isUserExist.isVerified) {
-            // throw new AppError(httpStatus.BAD_REQUEST, "User is not verified")
-            // done("User is not verified")
             return done(null, false, { message: "User is not verified" });
         }
         if (isUserExist && (isUserExist.isActive === user_interface_1.IsActive.BLOCKED || isUserExist.isActive === user_interface_1.IsActive.INACTIVE)) {
-            // throw new AppError(httpStatus.BAD_REQUEST, `User is ${isUserExist.isActive}`)
-            done(`User is ${isUserExist.isActive}`);
+            return done(null, false, { message: `User is ${isUserExist.isActive}` });
         }
         if (isUserExist && isUserExist.isDeleted) {
             return done(null, false, { message: "User is deleted" });

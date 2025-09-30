@@ -37,14 +37,11 @@ const getAllTours = (query) => __awaiter(void 0, void 0, void 0, function* () {
         .sort()
         .fields()
         .paginate();
-    const [data, mata] = yield Promise.all([
+    const [data, meta] = yield Promise.all([
         tours.build(),
         queryBuilder.getMeta()
     ]);
-    return {
-        data,
-        mata
-    };
+    return { data, meta };
 });
 const updateTour = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const existingTour = yield tour_module_1.Tour.findById(id);
@@ -77,8 +74,21 @@ const createTourType = (payload) => __awaiter(void 0, void 0, void 0, function* 
     }
     return yield tour_module_1.TourType.create({ name: payload.name });
 });
-const getAllTourTypes = () => __awaiter(void 0, void 0, void 0, function* () {
-    return yield tour_module_1.TourType.find();
+const getAllTourTypes = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const queryBlider = new queryBlider_1.QueryBuilder(tour_module_1.TourType.find(), query);
+    const tourTypes = yield queryBlider
+        .search(tour_constant_1.tourTypeSearchableFields)
+        .sort()
+        .fields()
+        .paginate();
+    const [data, meta] = yield Promise.all([
+        tourTypes.build(),
+        queryBlider.getMeta()
+    ]);
+    return {
+        data,
+        meta
+    };
 });
 const deleteTourType = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const existingTourType = yield tour_module_1.TourType.findById(id);

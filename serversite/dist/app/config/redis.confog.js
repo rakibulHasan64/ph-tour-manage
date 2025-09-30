@@ -29,7 +29,7 @@ exports.redisClient.on('error', err => console.log('Redis Client Error', err));
 const connactReids = () => __awaiter(void 0, void 0, void 0, function* () {
     if (!exports.redisClient.isOpen) {
         yield exports.redisClient.connect();
-        console.log("Redis is connected");
+        console.log("✅✅Redis is connected");
     }
 });
 exports.connactReids = connactReids;

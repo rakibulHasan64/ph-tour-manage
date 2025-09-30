@@ -1,4 +1,6 @@
 "use strict";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,8 +15,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PymantService = void 0;
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 const cloudnery_config_1 = require("../../config/cloudnery.config");
 const AppError_1 = __importDefault(require("../../errorHelpers/AppError"));
 const invoicos_1 = require("../../utils/invoicos");
@@ -49,38 +49,38 @@ const initPymant = (bookingId) => __awaiter(void 0, void 0, void 0, function* ()
     };
 });
 const successPayment = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    // Update Booking Status to COnfirm 
-    // Update Payment Status to PAID
     const session = yield booking_model_1.Booking.startSession();
     session.startTransaction();
     try {
-        const updatedPayment = yield pymant_modal_1.Payment.findOneAndUpdate({ transactionId: query.transactionId }, {
-            status: pymant_interface_1.PAYMENT_STATUS.PAID,
-        }, { new: true, runValidators: true, session: session });
-        if (!updatedPayment) {
+        const updatedPayment = yield pymant_modal_1.Payment.findOneAndUpdate({ transactionId: query.transactionId }, { status: pymant_interface_1.PAYMENT_STATUS.PAID }, { new: true, runValidators: true, session });
+        if (!updatedPayment)
             throw new AppError_1.default(401, "Payment not found");
-        }
-        const updatedBooking = yield booking_model_1.Booking
-            .findByIdAndUpdate(updatedPayment === null || updatedPayment === void 0 ? void 0 : updatedPayment.booking, { status: booking_interface_1.BOOKING_STATUS.COMPLETE }, { new: true, runValidators: true, session })
+        const updatedBooking = yield booking_model_1.Booking.findByIdAndUpdate(updatedPayment.booking, { status: booking_interface_1.BOOKING_STATUS.COMPLETE }, { new: true, runValidators: true, session })
             .populate("tour", "title")
             .populate("user", "name email");
-        if (!updatedBooking) {
+        if (!updatedBooking)
             throw new AppError_1.default(401, "Booking not found");
-        }
-        const invoiceData = {
+        const pdfBuffer = yield (0, invoicos_1.generatePdf)({
             bookingDate: updatedBooking.createdAt,
             guestCount: updatedBooking.guestCount,
             totalAmount: updatedPayment.amount,
             tourTitle: updatedBooking.tour.title,
             transactionId: updatedPayment.transactionId,
             userName: updatedBooking.user.name
-        };
-        const pdfBuffer = yield (0, invoicos_1.generatePdf)(invoiceData);
+        });
         const cloudinaryResult = yield (0, cloudnery_config_1.uploadBufferToCloudinary)(pdfBuffer, "invoice");
-        if (!cloudinaryResult) {
+        if (!cloudinaryResult)
             throw new AppError_1.default(401, "Error uploading pdf");
-        }
         yield pymant_modal_1.Payment.findByIdAndUpdate(updatedPayment._id, { invoiceUrl: cloudinaryResult.secure_url }, { runValidators: true, session });
+        const invoiceData = {
+            bookingDate: updatedBooking.createdAt,
+            guestCount: updatedBooking.guestCount,
+            totalAmount: updatedPayment.amount,
+            tourTitle: updatedBooking.tour.title,
+            transactionId: updatedPayment.transactionId,
+            userName: updatedBooking.user.name,
+            invoiceUrl: cloudinaryResult.secure_url
+        };
         yield (0, sendEmail_1.sendEmail)({
             to: updatedBooking.user.email,
             subject: "Your Booking Invoice",
@@ -89,45 +89,80 @@ const successPayment = (query) => __awaiter(void 0, void 0, void 0, function* ()
             attachments: [
                 {
                     filename: "invoice.pdf",
-                    content: pdfBuffer.toString("base64"),
+                    content: pdfBuffer,
                     contentType: "application/pdf"
                 }
             ]
         });
-        yield session.commitTransaction(); //transaction
+        yield session.commitTransaction();
         session.endSession();
         return { success: true, message: "Payment Completed Successfully" };
     }
     catch (error) {
-        yield session.abortTransaction(); // rollback
+        yield session.abortTransaction();
         session.endSession();
-        // throw new AppError(httpStatus.BAD_REQUEST, error) ❌❌
         throw error;
     }
 });
-// const successPaymant = async (query: Record<string, string> ) => {
-//    const session = await Booking.startSession()
-//   session.startTransaction()
-//   try {
-//     const Updatepayment = await Payment.findOneAndUpdate({
-//       status: PAYMENT_STATUS.PAID
-//     },{ new: true, runValidators: true, session }, { session })
-//      await Booking.findByIdAndUpdate(
-//        Updatepayment?.booking,
-//        {status: BOOKING_STATUS.COMPLETE},
-//       {  runValidators: true, session }
-//     )
-//       .populate("user", "name email phone address")
-//       .populate("tour", "title costFrom")
-//       .populate("payment")
+// const successPayment = async (query: Record<string, string>) => {
+//     const session = await Booking.startSession();
+//     session.startTransaction()
+//     try {
+//         const updatedPayment = await Payment.findOneAndUpdate({ transactionId: query.transactionId }, {
+//             status: PAYMENT_STATUS.PAID,
+//         }, { new: true, runValidators: true, session: session })
+//         if (!updatedPayment) {
+//             throw new AppError(401, "Payment not found")
+//         }
+//         const updatedBooking = await Booking
+//             .findByIdAndUpdate(
+//                 updatedPayment?.booking,
+//                 { status: BOOKING_STATUS.COMPLETE },
+//                 { new: true, runValidators: true, session }
+//             )
+//             .populate("tour","title")
+//             .populate("user", "name email")
+//         if (!updatedBooking) {
+//             throw new AppError(401, "Booking not found")
+//         }
+//       const invoiceData: IInvoiceData  = {
+//             bookingDate: updatedBooking.createdAt as Date,
+//             guestCount: updatedBooking.guestCount,
+//             totalAmount: updatedPayment.amount,
+//             tourTitle: (updatedBooking.tour as unknown as ITour).title,
+//             transactionId: updatedPayment.transactionId,
+//             userName: (updatedBooking.user as unknown as IUser).name
+//         }
+//       const pdfBuffer = await generatePdf(invoiceData)
+//       console.log("PDF Buffer Size:", pdfBuffer.length);
+//       const cloudinaryResult = await uploadBufferToCloudinary(pdfBuffer, "invoice")
+//       console.log("clodnary",cloudinaryResult);
+//         if (!cloudinaryResult) {
+//             throw new AppError(401, "Error uploading pdf")
+//         }
+//         await Payment.findByIdAndUpdate(updatedPayment._id, { invoiceUrl: cloudinaryResult.secure_url }, { runValidators: true, session })
+//         await sendEmail({
+//             to: (updatedBooking.user as unknown as IUser).email,
+//             subject: "Your Booking Invoice",
+//             templateName: "invoice",
+//             templateData: invoiceData,
+//             attachments: [
+//                 {
+//                     filename: "invoice.pdf",
+//                      content: pdfBuffer,
+//                     contentType: "application/pdf"
+//                 }
+//             ]
+//         })
 //         await session.commitTransaction(); //transaction
 //         session.endSession()
-//         return {success: true, message: "Pymant Completed SuccessFully"}
-//   } catch (error) {
-//     await session.abortTransaction()
-//     session.endSession()
-//     throw error
-//   }
+//         return { success: true, message: "Payment Completed Successfully" }
+//     } catch (error) {
+//         await session.abortTransaction(); // rollback
+//         session.endSession()
+//         // throw new AppError(httpStatus.BAD_REQUEST, error) ❌❌
+//         throw error
+//     }
 // };
 const failPaymant = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const session = yield booking_model_1.Booking.startSession();

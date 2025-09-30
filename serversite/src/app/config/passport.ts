@@ -17,9 +17,7 @@ passport.use(
       try {
        const isUserExist=await User.findOne({email})
       
-         // if (!isUserExist) {
-         //     return done(null,false,{message: "User does not exist"})
-         // }
+         
 
          if (!isUserExist) {
             return done(null, false, { message: "User does not exist" });

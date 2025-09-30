@@ -24,7 +24,8 @@ interface sendEmailOptions{
    templateData?: Record<string, any>;
    attachments?: {
       filename: string,
-      content: string,
+       content: string | Buffer,
+
       contentType: string
    }[]
 }

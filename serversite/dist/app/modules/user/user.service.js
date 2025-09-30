@@ -76,15 +76,16 @@ const updatedUser = (userId, payload, decodedToken) => __awaiter(void 0, void 0,
     return newUpdatedUser;
 });
 const getAllUsers = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const queryBuilder = new queryBlider_1.QueryBuilder(user_module_1.User.find(), query);
-    const usersData = queryBuilder
+    const queryBuilder = new queryBlider_1.QueryBuilder(user_module_1.User.find(), query)
         .filter()
         .search(userconact_1.userSearchableFields)
         .sort()
         .fields()
         .paginate();
+    const usersQuery = queryBuilder.build().select("_id name email role phone address auths createdAt updatedAt isDeleted isActive isVerified");
+    // data এবং meta একসাথে আনা হচ্ছে
     const [data, meta] = yield Promise.all([
-        usersData.build(),
+        usersQuery,
         queryBuilder.getMeta()
     ]);
     return {
