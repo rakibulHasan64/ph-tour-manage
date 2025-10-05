@@ -6,7 +6,7 @@ import { baseApi } from "../../baseApi";
 
 export const bookingApi = baseApi.injectEndpoints({
    endpoints: (builder) => ({
-      
+
 
       creatBooking: builder.mutation({
          query: (bookingData) => ({
@@ -16,19 +16,19 @@ export const bookingApi = baseApi.injectEndpoints({
          }),
          invalidatesTags: ["BOOKING"],
       }),
-      
+
 
 
       getTourTypes: builder.query({
          query: () => ({
             url: "/tour/tour-types",
             method: "GET",
-            
+
          }),
 
          providesTags: ["TOUR"],
 
-         transformResponse:(response)=> response.data
+         transformResponse: (response) => response.data
 
       }),
 
@@ -38,12 +38,15 @@ export const bookingApi = baseApi.injectEndpoints({
             method: "DELETE",
          }),
          invalidatesTags: ["TOUR"],
-      }),
 
       
+      }),
+
+
 
 
    }),
 })
 
-export const {useCreatBookingMutation } = bookingApi;
+export const { useCreatBookingMutation } = bookingApi;
+

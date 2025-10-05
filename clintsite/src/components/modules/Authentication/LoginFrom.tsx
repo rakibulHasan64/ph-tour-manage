@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useLoginMutation } from "../../../redux/featuer/auth/auth.api";
 import config from "../../../config";
 
+
 interface IErrorResponse {
    data: {
       message: string;
@@ -46,6 +47,8 @@ function LoginFrom({
          }
       }
    };
+
+        
    
    return (
       <>
@@ -104,7 +107,7 @@ function LoginFrom({
 
                <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                   <span className="relative z-10 bg-background px-2 text-muted-foreground">
-                     Or continue with
+                     Or continue with <Link to={"/Forgot-Password"} className="text-red-400">FogetPassword</Link>
                   </span>
                </div>
 

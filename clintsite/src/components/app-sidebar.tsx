@@ -13,17 +13,15 @@ import {
 } from "./ui/sidebar";
 
 import { Link } from "react-router";
-
-
 import Logo from "../assets/icon/Logo";
 import { getSidebarItems } from "../utils/getSidberItem";
 import { useUserInfoQuery } from "../redux/featuer/auth/auth.api";
 
+// ✅ AppSidebar component
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: userData } = useUserInfoQuery(undefined);
 
-  console.log( `user role ${userData?.data?.role}`);
-  
+  console.log(`User role: ${userData?.data?.role}`);
 
   const data = {
     navMain: getSidebarItems(userData?.data?.role),
@@ -31,22 +29,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar {...props}>
+      {/* ---- Header ---- */}
       <SidebarHeader className="items-center">
         <Link to="/">
           <Logo />
         </Link>
       </SidebarHeader>
+
+      {/* ---- Main Content ---- */}
       <SidebarContent>
-        {/* We create a SidebarGroup for each parent. */}
-        {data?.navMain?.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {item?.items?.map((item) => (
-                  <SidebarMenuItem key={item.title} >
-                    <SidebarMenuButton className="text-[16px] " asChild>
-                      <Link to={item.url} >{item.title}</Link>
+        {data?.navMain?.map((group) => (
+          <SidebarGroup key={group.title}>
+            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
+            <SidebarGroupContent className="space-y-3">
+              <SidebarMenu className="space-y-3">
+                {group?.items?.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton className="text-[16px]" asChild>
+                      <Link
+                        to={item.url}
+                        className="flex items-center gap-3 text-base hover:text-blue-600 transition-colors"
+                      >
+                        {item.icon && <item.icon size={20} />}
+                        <span>{item.title}</span>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -55,6 +61,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         ))}
       </SidebarContent>
+
+
+      {/* ---- Sidebar Rail ---- */}
       <SidebarRail />
     </Sidebar>
   );

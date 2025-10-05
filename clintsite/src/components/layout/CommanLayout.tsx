@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 
-import Footer from "./Footer";
+
 import Naver from "./Naver";
+import { Footer } from "./Footer";
 
 
 interface IProps{

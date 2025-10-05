@@ -1,4 +1,5 @@
-import { useState } from "react";
+import Aos from "aos";
+import { useEffect, useState } from "react";
 
 type FAQItem = {
    id: string;
@@ -11,6 +12,12 @@ type FAQCategory = "general" | "payment" | "preparation" | "destinations";
 function FAQSection() {
    const [activeCategory, setActiveCategory] = useState<FAQCategory>("general");
    const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
+   useEffect(() => {
+      Aos.init({
+         duration: 1000,
+         once: true,
+      });
+   }, []);
 
    const toggleItem = (id: string) => {
       setOpenItems((prev) => ({
@@ -136,14 +143,14 @@ function FAQSection() {
    };
 
    return (
-      <section className="py-16 bg-gradient-to-b from-blue-50 to-indigo-50">
+      <section className="py-16 bg-gradient-to-b from-blue-50 to-indigo-5">
          <div className="container mx-auto px-4">
             {/* Section Header */}
             <div className="text-center mb-16">
                <h2 className="text-4xl font-bold text-gray-800 mb-4">
                   প্রশ্ন <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">উত্তর</span>
                </h2>
-               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+               <p className="text-sm md:text-lg text-gray-600 max-w-2xl mx-auto">
                   আমাদের ট্যুর, বুকিং এবং ভ্রমণ সম্পর্কিত সাধারণ প্রশ্নের উত্তর
                   এখানে পাবেন।
                </p>
@@ -174,7 +181,7 @@ function FAQSection() {
             {/* FAQ Items */}
             <div className="max-w-4xl mx-auto">
                {faqData[activeCategory].map((item, index) => (
-                  <div
+                  <div data-aos="fade-up"
                      key={item.id}
                      className={`mb-6 bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-500 ${openItems[item.id]
                         ? "ring-2 ring-opacity-50"
@@ -227,7 +234,7 @@ function FAQSection() {
             </div>
 
             {/* Additional Help */}
-            <div className="text-center mt-16">
+            <div className="text-center mt-16" data-aos="fade-up">
                <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-8 max-w-2xl mx-auto text-white shadow-xl">
                   <h3 className="text-2xl font-semibold mb-4">
                      আরও প্রশ্ন আছে?

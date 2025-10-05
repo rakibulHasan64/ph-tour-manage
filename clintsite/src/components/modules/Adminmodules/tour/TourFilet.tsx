@@ -52,10 +52,10 @@ export default function TourFilet() {
    };
 
    return (
-      <div className="col-span-3 w-full h-[500px] border border-muted rounded-md p-5 space-y-4">
+      <div className="col-span-3 w-full h-[500px] border border-muted text-white rounded-md p-5 space-y-4">
          <div className="flex justify-between items-center">
             <h1>Filters</h1>
-            <Button size="sm" variant="outline" onClick={handleClearFilter}>
+            <Button className="text-black" size="sm" variant="outline" onClick={handleClearFilter}>
                Clear Filter
             </Button>
          </div>

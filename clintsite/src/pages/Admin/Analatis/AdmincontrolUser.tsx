@@ -1,8 +1,10 @@
 import { Search, User, Shield, CheckCircle, XCircle, MoreVertical, Edit, Trash2, UserPlus } from 'lucide-react';
 import { useState } from 'react';
 import { useAdminContulAlluserQuery } from '../../../redux/featuer/auth/auth.api';
-import { Role } from '../../../types/auth.type';
+
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '../../../components/ui/pagination';
+import type { IUser } from '../../../types/auth.type';
+
 
 // Action dropdown menu
 const ActionMenu = () => {
@@ -32,16 +34,6 @@ const ActionMenu = () => {
    );
 };
 
-interface IUser {
-   _id: string; // Backend অনুযায়ী _id
-   name: string;
-   email: string;
-   role: Role;
-   isActive: boolean;
-   isVerified: boolean;
-   phone?: string;
-   address?: string;
-}
 
 function AdmincontrolUser() {
    const [currentPage, setCurrentPage] = useState(1);
@@ -120,15 +112,15 @@ function AdmincontrolUser() {
                                  </div>
                               </td>
                               <td className="px-6 py-4">
-                                 {user.role === Role.ADMIN ? (
+                                 {user.role === "ADMIN" ? (
                                     <span className="inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-purple-700 bg-purple-100 dark:text-purple-300 dark:bg-purple-900/20 rounded-full">
                                        <Shield size={14} /> Admin
                                     </span>
-                                 ) : user.role === Role.SUPER_ADMIN ? (
+                                 ) : user.role === "SUPER_ADMIN" ? (
                                     <span className="inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-900/20 rounded-full">
                                        <Shield size={14} /> Super Admin
                                     </span>
-                                 ) : user.role === Role.GUIDE ? (
+                                 ) : user.role === "GUIDE" ? (
                                     <span className="inline-flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 dark:text-blue-300 dark:bg-blue-900/20 rounded-full">
                                        <User size={14} /> Guide
                                     </span>

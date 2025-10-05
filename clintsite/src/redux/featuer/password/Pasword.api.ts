@@ -32,7 +32,7 @@ export const authsPassApi = baseApi.injectEndpoints({
 
 
       setPassword: builder.mutation({
-         query: (payload: { [key: string]: any }) => ({
+         query: (payload: { password: string }) => ({
             url: "/auth/set-password",
             method: "POST",
             data: payload,

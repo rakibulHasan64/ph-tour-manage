@@ -42,12 +42,26 @@ export const router = createBrowserRouter([
          },
 
          {
-            Component: TourDetails,
+            Component: withAuth(TourDetails),
             path: "tours/:id"
          },
          {
             Component: About,
             path: "about"
+
+         },
+
+         {
+            Component: Pymantsucess,
+            path: "payment/success",
+
+
+         },
+
+         {
+
+            Component: Faile,
+            path: "payment/cancel"
 
          },
 
@@ -120,32 +134,22 @@ export const router = createBrowserRouter([
    },
 
    {  
-      Component: ReesetPaswword,
+      Component: withAuth(ReesetPaswword),
       path: "/reset-password",
       errorElement: <h1 className="text-red-500">Page Not Found 😢</h1>, // custom error
    },
    {
-      Component: SetPassword,
+      Component: withAuth(SetPassword),
       path: "/Set-Password"
 
    },
 
    {
-      Component: ChangePassword,
+      Component: withAuth(ChangePassword),
       path: "/Change-Password"
 
    },
 
-   {
-      Component: Pymantsucess,
-      path: "/payment/success"
-   },
 
-   {
-
-      Component: Faile,
-      path: "/payment/cancel"
-
-   }
    
 ])

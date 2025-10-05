@@ -41,7 +41,7 @@ export default function MaltipleImageUploder({
     } else {
       onChange([]);
     }
-  }, [files]);
+  }, [files, onChange]);
 
 
   return (

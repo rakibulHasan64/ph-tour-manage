@@ -1,8 +1,16 @@
-import { useState } from "react";
+import Aos from "aos";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 function Gallery() {
    // Sample tour data
+
+   useEffect(() => {
+      Aos.init({
+         duration: 1000,
+         once: true,
+      });
+   }, []);
    const tours = [
       {
          id: 1,
@@ -104,8 +112,8 @@ function Gallery() {
 
                {/* Tours grid */}
                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {filteredTours.slice(0, visibleTours).map(tour => (
-                     <div key={tour.id} className="bg-white rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
+                  {filteredTours?.slice(0, visibleTours)?.map(tour => (
+                     <div data-aos="fade-up" key={tour.id} className="bg-white rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
                         <div className="relative h-56 overflow-hidden">
                            <img
                               src={tour.image}
@@ -134,7 +142,7 @@ function Gallery() {
                                  onClick={() => navigate(`/tours`)} 
                                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                               >
-                                 View Details
+                               Read More
                               </button>
                            </div>
                         </div>
@@ -143,7 +151,7 @@ function Gallery() {
                </div>
 
                {/* Load more button */}
-               {visibleTours < filteredTours.length && (
+               {visibleTours < filteredTours?.length && (
                   <div className="text-center mt-12">
                      <button
                         onClick={loadMore}

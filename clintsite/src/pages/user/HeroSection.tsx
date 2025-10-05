@@ -40,7 +40,7 @@ export default function HeroSection() {
    
 
          {/* Foreground content */}
-         <div className="relative z-10 container mx-auto mt-44 mb-44">
+         <div className="relative z-10 container mx-auto mt-74 mb-44">
          
             <div className="mx-auto flex max-w-5xl flex-col items-center" >
                <div data-aos="fade-up" className="flex flex-col items-center gap-6 text-center">

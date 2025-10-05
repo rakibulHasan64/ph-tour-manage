@@ -4,6 +4,7 @@ import { useGetAllToursQuery } from "../../redux/featuer/tour/tour.api";
 import { useCreatBookingMutation } from "../../redux/featuer/booking/booking.api";
 import { Button } from "../../components/ui/button";
 import { format } from "date-fns";
+import Loading from "../../components/layout/Loding";
 
 export default function BookingPage() {
    const [guestCount, setGuestCount] = useState(1);
@@ -39,14 +40,18 @@ export default function BookingPage() {
       if (data) {
          bookingData = {
             tour: id,
-            guestCount: guestCount,
+            guestCount: Number(guestCount),
+            
          };
       }
 
       try {
          const res = await createBooking(bookingData).unwrap();
+
+         console.log("bookinge data ios ", res);
+         
          if (res.success) {
-            window.open(res.data.paymentUrl);
+            window.open(res?.data?.paymentUrl);
          }
       } catch (err) {
          console.log(err);
@@ -55,9 +60,7 @@ export default function BookingPage() {
 
    if (isLoading) {
       return (
-         <div className="min-h-screen flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-         </div>
+         <Loading />
       );
    }
 

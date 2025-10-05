@@ -18,7 +18,7 @@ function About() {
    return (
       <>
          {/* Hero Section */}
-         <section className="relative h-screen flex items-center justify-center overflow-hidden">
+         <section className="relative h-screen flex items-center justify-center overflow-hidden dark:text-white">
             <div className="absolute inset-0 z-0">
                <div className="absolute inset-0 bg-gradient-to-r "></div>
                <img
@@ -29,7 +29,7 @@ function About() {
             </div>
 
             <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto" data-aos="fade-up">
-               <h1 className="text-4xl md:text-6xl font-bold mb-6">Journey Beyond Boundaries</h1>
+               <h1 className="text-4xl md:text-6xl font-bold mb-6 dark:text-white">Journey Beyond Boundaries</h1>
                <p className="text-xl md:text-2xl mb-8">
                   Crafting unforgettable adventures since 2010
                </p>
@@ -54,7 +54,7 @@ function About() {
          <section className="py-20 px-4 md:px-8 max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 gap-16 items-center">
                <div data-aos="fade-right">
-                  <h2 className="text-4xl font-bold text-gray-800 mb-6 relative pb-2">
+                  <h2 className="text-4xl font-bold text-gray-800 mb-6 relative pb-2 dark:text-white">
                      Our Story
                      <span className="absolute bottom-0 left-0 w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600"></span>
                   </h2>
@@ -97,11 +97,11 @@ function About() {
          </section>
 
          {/* Stats Section */}
-         <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100 relative overflow-hidden">
+         <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100 relative overflow-hidden dark:bg-black">
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-200 rounded-full -translate-y-32 translate-x-32 opacity-50"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-200 rounded-full translate-y-32 -translate-x-32 opacity-50"></div>
 
-            <div className="max-w-6xl mx-auto px-4 relative z-10">
+            <div className="max-w-6xl mx-auto px-4 relative z-10 ">
                <h2 className="text-4xl font-bold text-center text-gray-800 mb-16" data-aos="fade-up">By The Numbers</h2>
                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
                   <div className="bg-white p-8 rounded-2xl shadow-lg transform hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="100">
@@ -116,7 +116,7 @@ function About() {
                      <p className="text-gray-600 font-medium">Happy Travelers</p>
                   </div>
 
-                  <div className="bg-white p-8 rounded-2xl shadow-lg transform hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="200">
+                  <div className="bg-white p-8 rounded-2xl shadow-lg transform hover:-translate-y-2 transition duration-300 " data-aos="fade-up" data-aos-delay="200">
                      <div className="bg-green-100 p-4 rounded-full w-20 h-20 flex-col sm:flex-row items-center justify-center mx-auto mb-4">
                         <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -129,7 +129,7 @@ function About() {
                      <p className="text-gray-600 font-medium">Destinations</p>
                   </div>
 
-                  <div className="bg-white p-8 rounded-2xl shadow-lg transform hover:-translate-y-2 transition duration-300" data-aos="fade-up" data-aos-delay="300">
+                  <div className="bg-white p-8 rounded-2xl shadow-lg transform hover:-translate-y-2 transition duration-300 " data-aos="fade-up" data-aos-delay="300">
                      <div className="bg-purple-100 p-4 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
                         <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -159,8 +159,8 @@ function About() {
          {/* Team Section */}
          <section className="py-20 px-4 max-w-6xl mx-auto">
             <div className="text-center mb-16" data-aos="fade-up">
-               <h2 className="text-4xl font-bold text-gray-800 mb-4">Meet Our Team</h2>
-               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+               <h2 className="text-4xl font-bold text-gray-800 mb-4 dark:text-white">Meet Our Team</h2>
+               <p className="text-xl text-gray-600 max-w-3xl mx-auto dark:text-white">
                   Our passionate team of travel experts is dedicated to creating unforgettable experiences for you.
                </p>
             </div>
@@ -277,10 +277,10 @@ function About() {
          </section>
 
          {/* Values Section */}
-         <section className="py-20 bg-gray-900/10 text-white font-sans">
+         <section className="py-20 bg-gray-900/10 text-white font-sans dark:text-white">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                {/* Title Section */}
-               <h2 className="text-4xl sm:text-5xl font-extrabold text-center mb-16 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500">
+               <h2 className="text-4xl sm:text-5xl font-extrabold text-center mb-16 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500 dark:text-white">
                   Our Values
                </h2>
                {/* Values Grid */}
@@ -301,7 +301,7 @@ function About() {
                         <HeartHandshake className="h-8 w-8" strokeWidth={2.5} />
                      </div>
                      <h3 className="text-2xl font-bold mb-4">Integrity & Respect</h3>
-                     <p className="text-white leading-relaxed">
+                     <p className="text-white leading-relaxed dark:text-white">
                         Our team operates with unwavering integrity, respecting every culture and environment we encounter to build trust and lasting relationships.
                      </p>
                   </div>
@@ -329,7 +329,7 @@ function About() {
 
             <div className="max-w-4xl mx-auto px-4 relative z-10">
                <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight leading-tight">
-                  Ready to Explore With Us?
+                  Ready to Explore With Us? 
                </h2>
                <p className="text-xl md:text-2xl mb-10 font-light max-w-2xl mx-auto">
                   Join thousands of satisfied travelers who have experienced the world through our carefully crafted tours and personalized adventures.

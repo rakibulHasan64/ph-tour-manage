@@ -10,9 +10,17 @@ export interface IAuthProvider {
    providerId: string;
 }
 
-export enum Role {
-   SUPER_ADMIN = "SUPER_ADMIN",
-   ADMIN = "ADMIN",
-   USER = "USER",
-   GUIDE = "GUIDE",
+export type Role = "SUPER_ADMIN" | "ADMIN" | "USER" | "GUIDE";
+
+
+
+export interface IUser {
+   _id: string; 
+   name: string;
+   email: string;
+   role: Role;
+   isActive: boolean;
+   isVerified: boolean;
+   phone?: string;
+   address?: string;
 }
