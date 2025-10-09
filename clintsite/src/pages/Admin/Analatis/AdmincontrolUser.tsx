@@ -53,7 +53,7 @@ function AdmincontrolUser() {
    );
 
    return (
-      <div className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <div className="p-4 md:p-8  dark:bg-gray-900 min-h-screen">
          <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">

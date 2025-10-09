@@ -2,11 +2,12 @@ import { useNavigate } from "react-router";
 import { useUserInfoQuery } from "../../redux/featuer/auth/auth.api";
 import { useSetPasswordMutation } from "../../redux/featuer/password/Pasword.api";
 import { useState } from "react";
+import { Lock, Shield, User } from "lucide-react";
 
 function SetPassword() {
    const { data: user } = useUserInfoQuery(undefined);
    const [setPassword, { isLoading }] = useSetPasswordMutation();
-   const navget=useNavigate()
+   const navigate = useNavigate()
 
    // Local state
    const [password, setPasswordValue] = useState("");
@@ -22,84 +23,97 @@ function SetPassword() {
          setShowSuccess(true);
          // Hide success message after 3 seconds
          setTimeout(() => setShowSuccess(false), 3000);
-         navget("/login")
+         navigate("/login")
       } catch (err) {
          console.error("Failed to set password:", err);
       }
    };
 
    return (
-      <>
-         
-         <div className="max-w-md mx-auto my-12 p-8 bg-white rounded-2xl shadow-lg mt-80">
-            <h2 className="text-3xl font-semibold text-center text-gray-800 mb-2">
-               🔒 Set Password
-            </h2>
-            <p className="text-center text-gray-500 mb-8">
-               User: <span className="font-medium text-gray-700">{user?.name}</span>
-            </p>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-               <div>
-                  <input
-                     type="password"
-                     placeholder="Enter new password"
-                     value={password}
-                     onChange={(e) => setPasswordValue(e.target.value)}
-                     className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                  />
-               </div>
-
-               <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-3 px-4 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-               >
-                  {isLoading ? (
-                     <span className="flex items-center justify-center">
-                        <svg
-                           className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                        >
-                           <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                           ></circle>
-                           <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 
-                     5.291A7.962 7.962 0 014 12H0c0 3.042 
-                     1.135 5.824 3 7.938l3-2.647z"
-                           ></path>
-                        </svg>
-                        Setting...
-                     </span>
-                  ) : (
-                     "Set Password"
-                  )}
-               </button>
-            </form>
-
-            {showSuccess && (
-               <div className="mt-6 p-4 bg-green-50 text-green-700 rounded-lg border border-green-200 shadow-sm text-center">
-                  ✅ Password updated successfully!
-               </div>
-            )}
-
-            {/* {error && (
-               <div className="mt-6 p-4 bg-red-50 text-red-700 rounded-lg border border-red-200 shadow-sm text-center">
-                  ❌ Error updating password
-               </div>
-            )} */}
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-blue-900 px-4 relative overflow-hidden">
+         {/* Background Elements */}
+         <div className="absolute inset-0">
+            <div className="absolute top-10 left-10 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl"></div>
+            <div className="absolute top-1/2 right-20 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl"></div>
          </div>
-      </>
+
+         {/* Main Card */}
+         <div className="relative z-10 w-full max-w-md">
+            <div className="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 shadow-2xl overflow-hidden">
+               {/* Header */}
+               <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 p-8 text-center border-b border-white/10">
+                  <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                     <Lock className="w-8 h-8 text-white" />
+                  </div>
+                  <h1 className="text-2xl font-bold text-white mb-2">
+                     Set Password
+                  </h1>
+                  <div className="flex items-center justify-center gap-2 text-cyan-100 text-sm">
+                     <User className="w-4 h-4" />
+                     <span>Welcome, {user?.name}</span>
+                  </div>
+               </div>
+
+               {/* Form */}
+               <form onSubmit={handleSubmit} className="p-8">
+                  <div className="space-y-6">
+                     {/* Password Field */}
+                     <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-white font-medium text-sm">
+                           <Shield className="w-4 h-4 text-cyan-400" />
+                           New Password
+                        </label>
+                        <input
+                           type="password"
+                           placeholder="Enter new password"
+                           value={password}
+                           onChange={(e) => setPasswordValue(e.target.value)}
+                           className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
+                           required
+                        />
+                     </div>
+
+                     {/* Submit Button */}
+                     <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+                     >
+                        {isLoading ? (
+                           <>
+                              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                              Setting...
+                           </>
+                        ) : (
+                           <>
+                              <Lock className="w-4 h-4" />
+                              Set Password
+                           </>
+                        )}
+                     </button>
+                  </div>
+               </form>
+
+               {/* Success Message */}
+               {showSuccess && (
+                  <div className="mx-8 mb-6 p-4 bg-green-500/20 backdrop-blur-sm border border-green-400/30 text-green-100 rounded-xl text-center flex items-center justify-center gap-2">
+                     <div className="w-4 h-4 bg-green-400 rounded-full flex items-center justify-center">
+                        <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                     </div>
+                     <span className="font-semibold">Password updated successfully!</span>
+                  </div>
+               )}
+
+               {/* Footer */}
+               <div className="px-8 py-6 bg-white/5 border-t border-white/10 text-center">
+                  <p className="text-white/60 text-sm">
+                     You'll be redirected to login after setting your password
+                  </p>
+               </div>
+            </div>
+         </div>
+      </div>
    );
 }
 

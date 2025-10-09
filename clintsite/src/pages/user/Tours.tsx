@@ -66,10 +66,10 @@ export default function Tours() {
             />
             <div className="absolute inset-0 bg-black/40 z-20 flex items-center justify-center">
                <div className="text-center text-white">
-                  <h1 className="text-2xl md:text-6xl font-black mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                  <h1 className="text-2xl md:text-6xl font-black mb-4 bg-gradient-to-r from-red-500 -opacity-20 to-orange-600 bg-clip-text text-transparent">
                      EXPLORE BANGLADESH
                   </h1>
-                  <p className="text-xl opacity-90 font-light tracking-wider">
+                  <p className="text-xl opacity-90  font-light tracking-wider">
                      Discover Hidden Gems • Create Memories • Live Adventures
                   </p>
                </div>

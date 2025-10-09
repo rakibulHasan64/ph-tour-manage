@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import type { ISidebarItem } from "../types";
+
 
 // Pages
 import AddTour from "../pages/Admin/AddTour";
@@ -19,6 +19,7 @@ import {
    MdLocalOffer,
    MdLogout,
 } from "react-icons/md";
+import type { ISidebarItem } from "../types";
 
 export const adminSidebarItems: ISidebarItem[] = [
    {

@@ -20,6 +20,7 @@ const navigationLinks = [
   { href: "/", label: "Home", role: "PUBLIC" },
   { href: "/about", label: "About", role: "PUBLIC" },
   { href: "/tours", label: "Tours", role: "PUBLIC" },
+  { href: "/Account", label: "Account", role: "PUBLIC" },
   { href: "/admin", label: "Dashboard", role: role.admin },
   { href: "/admin", label: "", role: role.superAdmin },
 ];
@@ -28,6 +29,8 @@ export default function Naver() {
   const [open, setOpen] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const { data } = useUserInfoQuery(undefined);
+
+  
   const [logOut] = useLogOutMutation();
   const dispatch = useAppDispatch();
 
@@ -59,32 +62,40 @@ export default function Naver() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [location.pathname]);
+  const isFixed =
+    location.pathname === "/" ||
+    location.pathname === "/about" ||
+    location.pathname === "/tours" ||
+    location.pathname === "/Account";
+  
+  const isBlackText =
+    location.pathname === "/Account" || location.pathname.includes("/tours/");
 
-  const isFixed = location.pathname === "/";
 
   return (
     <nav
       className={`
-        ${isFixed ? "fixed top-0 left-0 w-full z-50 text-black" : "relative text-black"}
+        ${isFixed ? "fixed top-0 left-0 w-full z-50 text-white" : "relative text-black"}
         transition-all duration-500
         ${isScrolled ? "bg-white/30 shadow-md  py-3" : "bg-transparent text-black py-3"}
       `}
     >
       <div className="container mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="text-2xl font-bold ">
-          Travel
+        <Link to="/" className=" ">
+          <img className="w-35 h-16 object-cover" src="/Travel_Agency_Logo_with_Earth_Tones-removebg-preview.png" alt="" />
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8 text-black">
+        <div className={`hidden md:flex items-center gap-8 transition-colors duration-300
+        ${isBlackText ? "text-black" : "text-white"} -opacity-40`}>
           <NavigationMenu>
             <NavigationMenuList>
               {navigationLinks.map((link, index) => (
                 <NavigationMenuItem key={index}>
                   <NavigationMenuLink
                     href={link.href}
-                    className=" hover:text-cyan-400 transition-colors duration-300 font-medium"
+                    className=" hover:text-cyan-400 text-[17px]  transition-colors duration-300 font-medium"
                   >
                     {link.label}
                   </NavigationMenuLink>
@@ -97,10 +108,14 @@ export default function Naver() {
         {/* Right Section */}
         <div className="hidden md:flex items-center gap-3">
           {/* Settings */}
-          <div className="relative text-black">
+          <div className="relative ">
             <button
               onClick={() => setOpen(!open)}
-              className="flex items-center gap-2 px-3 py-2 border rounded-lg hover:bg-gray-100"
+              className={`flex items-center gap-2 px-3 py-2 border rounded-lg transition-colors duration-200
+        ${ isFixed
+                  ? "bg-orange-500 text-white border-orange-500 hover:bg-orange-600"
+                  : "text-white border-white hover:bg-gray-100 hover:text-black"
+                }`}
             >
               <Settings className="w-5 h-5" />
               <span>Settings</span>
@@ -149,16 +164,24 @@ export default function Naver() {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-black"
+          className={`md:hidden transition-colors duration-300 ${isBlackText ? "text-black" : "text-white"
+            }`}
           onClick={() => setMobileMenu(!mobileMenu)}
         >
-          {mobileMenu ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+          {mobileMenu ? (
+            <X className="w-7 h-7" />
+          ) : (
+            <Menu className="w-7 h-7" />
+          )}
         </button>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenu && (
-        <div className="md:hidden bg-white/30 backdrop-blur-xl text-black px-6 py-4 space-y-4 transition-all duration-300">
+        <div
+          className={`md:hidden bg-white/30 backdrop-blur-xl px-6 py-4 space-y-4 transition-all duration-300 
+        ${isBlackText ? "text-black" : "text-white"}`}
+        >
           {navigationLinks.map((link, index) => (
             <Link
               key={index}

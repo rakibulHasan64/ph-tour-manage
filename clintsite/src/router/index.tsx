@@ -5,8 +5,6 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Verfiy from "../pages/Verfiy";
 import DasbordLayout from "../components/layout/DasbordLayout";
-import { generateRoutes } from "../utils/generateRoutes";
-import { adminSidebarItems } from "./adminSideber";
 import { userSidebarItems } from "./UserSidber";
 import { withAuth } from "../utils/with.Auth";
 import { role } from "../constants/role";
@@ -24,6 +22,9 @@ import ForgetPassword from "../pages/authpassword/ForgetPassword";
 import ReesetPaswword from "../pages/authpassword/ReesetPaswword";
 import SetPassword from "../pages/authpassword/SetPassword";
 import ChangePassword from "../pages/authpassword/ChangePassword";
+import { adminSidebarItems } from "./adminSideber";
+import { generateRoutes } from "../utils/generateRoutes";
+import AccountPage from "../pages/AccountPage";
 
 
 export const router = createBrowserRouter([
@@ -48,6 +49,12 @@ export const router = createBrowserRouter([
          {
             Component: About,
             path: "about"
+
+         },
+
+         {
+            Component: AccountPage,
+            path: "Account"
 
          },
 

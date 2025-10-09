@@ -3,18 +3,36 @@ import { useParams } from "react-router";
 import { useGetAllToursQuery } from "../../redux/featuer/tour/tour.api";
 import { useCreatBookingMutation } from "../../redux/featuer/booking/booking.api";
 import { Button } from "../../components/ui/button";
-import { format } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 import Loading from "../../components/layout/Loding";
+import {
+   MapPin,
+   Clock,
+   Users,
+   Calendar,
+   Star,
+   Shield,
+   Check,
+   ArrowRight,
+   Plus,
+   Minus,
+   Lock,
+   Heart,
+   Share2
+} from "lucide-react";
 
 export default function BookingPage() {
    const [guestCount, setGuestCount] = useState(1);
    const [totalAmount, setTotalAmount] = useState(0);
+   const [isFavorite, setIsFavorite] = useState(false);
    const { id } = useParams();
    const { data, isLoading, isError } = useGetAllToursQuery({ _id: id });
    const [createBooking] = useCreatBookingMutation();
-   
+
 
    const tourData = data?.[0];
+
+   console.log("sgwqrgqwrt", tourData);
 
    useEffect(() => {
       if (!isLoading && !isError && tourData) {
@@ -41,7 +59,6 @@ export default function BookingPage() {
          bookingData = {
             tour: id,
             guestCount: Number(guestCount),
-            
          };
       }
 
@@ -49,7 +66,7 @@ export default function BookingPage() {
          const res = await createBooking(bookingData).unwrap();
 
          console.log("bookinge data ios ", res);
-         
+
          if (res.success) {
             window.open(res?.data?.paymentUrl);
          }
@@ -59,211 +76,189 @@ export default function BookingPage() {
    };
 
    if (isLoading) {
-      return (
-         <Loading />
-      );
+      return <Loading />;
    }
 
    return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-8">
          <div className="container mx-auto px-4">
             {!isLoading && isError && (
-               <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-                  <h2 className="text-xl font-semibold text-red-800 mb-2">Something Went Wrong!</h2>
-                  <p className="text-red-600">Please try again later.</p>
+               <div className="bg-red-500/20 backdrop-blur-lg border border-red-500/30 rounded-3xl p-8 text-center">
+                  <div className="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                     <div className="text-2xl">⚠️</div>
+                  </div>
+                  <h2 className="text-2xl font-bold text-white mb-2">Something Went Wrong!</h2>
+                  <p className="text-red-200">Please try again later.</p>
                </div>
             )}
 
             {!isLoading && data?.length === 0 && (
-               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-                  <h2 className="text-xl font-semibold text-yellow-800 mb-2">No Tour Found</h2>
-                  <p className="text-yellow-600">The tour you're looking for doesn't exist.</p>
+               <div className="bg-yellow-500/20 backdrop-blur-lg border border-yellow-500/30 rounded-3xl p-8 text-center">
+                  <div className="w-16 h-16 bg-yellow-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                     <div className="text-2xl">🔍</div>
+                  </div>
+                  <h2 className="text-2xl font-bold text-white mb-2">No Tour Found</h2>
+                  <p className="text-yellow-200">The tour you're looking for doesn't exist.</p>
                </div>
             )}
 
             {!isLoading && !isError && data!.length > 0 && (
-               <div className="flex flex-col lg:flex-row gap-8">
+               <div className="flex flex-col xl:flex-row gap-8">
                   {/* Left Section - Tour Details */}
                   <div className="flex-1 space-y-8">
                      {/* Tour Header */}
-                     <div className="bg-white rounded-2xl p-6 shadow-sm">
-                        <h1 className="text-3xl font-bold text-gray-800 mb-4">{tourData?.title}</h1>
-                        <p className="text-gray-600 mb-6">{tourData?.description}</p>
+                     <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-gray-700/50">
+                        <div className="flex justify-between items-start mb-6">
+                           <div className="flex items-center gap-3">
+                              <div className="w-2 h-8 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full"></div>
+                              <h1 className="text-3xl md:text-4xl font-black text-white">{tourData?.title}</h1>
+                           </div>
+                           <div className="flex items-center gap-2">
+                              <button
+                                 onClick={() => setIsFavorite(!isFavorite)}
+                                 className={`p-3 rounded-2xl transition-all duration-300 transform hover:scale-110 ${isFavorite
+                                       ? 'bg-red-500/20 text-red-400 shadow-lg'
+                                       : 'bg-white/10 text-white hover:bg-white/20'
+                                    }`}
+                              >
+                                 <Heart className={`w-5 h-5 ${isFavorite ? 'fill-red-400' : ''}`} />
+                              </button>
+                              <button className="p-3 bg-white/10 text-white rounded-2xl hover:bg-white/20 transition-all duration-300 transform hover:scale-110">
+                                 <Share2 className="w-5 h-5" />
+                              </button>
+                           </div>
+                        </div>
+                        <p className="text-gray-300 text-lg leading-relaxed mb-8">{tourData?.description}</p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                           <div className="flex items-center">
-                              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                                 <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                 </svg>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                           <div className="flex items-center gap-4 p-4 bg-gray-700/50 rounded-2xl border border-gray-600/50 group hover:scale-105 transition-transform duration-300">
+                              <div className="w-12 h-12 bg-blue-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                 <MapPin className="w-6 h-6 text-blue-400" />
                               </div>
                               <div>
-                                 <p className="text-sm text-gray-500">Location</p>
-                                 <p className="font-medium">{tourData?.location}</p>
+                                 <p className="text-sm text-gray-400">Location</p>
+                                 <p className="font-semibold text-white text-lg">{tourData?.location}</p>
                               </div>
                            </div>
 
-                           <div className="flex items-center">
-                              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                                 <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                 </svg>
+                           <div className="flex items-center gap-4 p-4 bg-gray-700/50 rounded-2xl border border-gray-600/50 group hover:scale-105 transition-transform duration-300">
+                              <div className="w-12 h-12 bg-green-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                 <Clock className="w-6 h-6 text-green-400" />
                               </div>
                               <div>
-                                 <p className="text-sm text-gray-500">Duration</p>
-                                 <p className="font-medium"><p>
-                                    <strong>Dates:</strong>{" "}
-                                    {format(
-                                       new Date(
-                                          tourData?.startDate ? tourData?.startDate : new Date()
-                                       ),
-                                       "PP"
-                                    )}{" "}
-                                    -{" "}
-                                    {format(
-                                       new Date(tourData?.endDate ? tourData?.endDate : new Date()),
-                                       "PP"
-                                    )}
-                                 </p></p>
+                                 <p className="text-sm text-gray-400">Duration</p>
+                                 <p className="font-semibold text-white text-lg">
+                                    {differenceInDays(
+                                       new Date(tourData?.endDate || new Date()),
+                                       new Date(tourData?.startDate || new Date())
+                                    ) + 1} days
+                                 </p>
                               </div>
                            </div>
 
-                           <div className="flex items-center">
-                              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                                 <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                 </svg>
+                           <div className="flex items-center gap-4 p-4 bg-gray-700/50 rounded-2xl border border-gray-600/50 group hover:scale-105 transition-transform duration-300">
+                              <div className="w-12 h-12 bg-purple-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                 <Calendar className="w-6 h-6 text-purple-400" />
                               </div>
                               <div>
-                                 <p className="text-sm text-gray-500">Tour Type</p>
-                                 <p className="font-medium">{tourData?.tourType}</p>
+                                 <p className="text-sm text-gray-400">Dates</p>
+                                 <p className="font-semibold text-white text-sm">
+                                    {format(new Date(tourData?.startDate || new Date()), "MMM dd")} -{" "}
+                                    {format(new Date(tourData?.endDate || new Date()), "MMM dd, yyyy")}
+                                 </p>
                               </div>
                            </div>
 
-                           <div className="flex items-center">
-                              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
-                                 <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                 </svg>
+                           <div className="flex items-center gap-4 p-4 bg-gray-700/50 rounded-2xl border border-gray-600/50 group hover:scale-105 transition-transform duration-300">
+                              <div className="w-12 h-12 bg-orange-500/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                 <Users className="w-6 h-6 text-orange-400" />
                               </div>
                               <div>
-                                 <p className="text-sm text-gray-500">Max Guests</p>
-                                 <p className="font-medium">{tourData?.maxGuest}</p>
+                                 <p className="text-sm text-gray-400">Max Guests</p>
+                                 <p className="font-semibold text-white text-lg">{tourData?.maxGuest}</p>
                               </div>
                            </div>
                         </div>
                      </div>
 
                      {/* Tour Image */}
-                     <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
+                     <div className="bg-gray-800/50 backdrop-blur-lg rounded-3xl overflow-hidden shadow-2xl border border-gray-700/50">
                         <img
                            src={tourData?.images[1]}
                            alt={tourData?.title}
-                           className="w-full h-80 object-cover"
+                           className="w-full h-80 object-cover transform hover:scale-105 transition-transform duration-700"
                         />
                      </div>
 
-                     {/* What's Included */}
-                     <div className="bg-white rounded-2xl p-6 shadow-sm">
-                        <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                           <span className="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
-                           What's Included
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                           {tourData?.included.map((item, index) => (
-                              <div key={index} className="flex items-start">
-                                 <svg className="w-5 h-5 text-green-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                                 </svg>
-                                 <span className="text-gray-700">{item}</span>
-                              </div>
-                           ))}
-                        </div>
-                     </div>
-
-                     {/* Tour Plan */}
-                     <div className="bg-white rounded-2xl p-6 shadow-sm">
-                        <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                           <span className="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
-                           Tour Plan
-                        </h2>
-                        <div className="space-y-4">
-                           {tourData?.tourPlan?.slice(0,3).map((plan, index) => (
-                              <div key={index} className="flex">
-                                 <div className="flex flex-col items-center mr-4">
-                                    <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold">
-                                       {index + 1}
-                                    </div>
-                                    {index < tourData.tourPlan.length - 1 && (
-                                       <div className="w-1 h-12 bg-blue-200 my-1"></div>
-                                    )}
-                                 </div>
-                                 <div className="bg-blue-50 p-4 rounded-lg flex-1">
-                                    <p className="text-gray-800">{plan}</p>
-                                 </div>
-                              </div>
-                           ))}
-                        </div>
-                     </div>
+                  
                   </div>
 
                   {/* Right Section - Booking Card */}
-                  <div className="w-full lg:w-96">
-                     <div className="bg-white rounded-2xl p-6 shadow-lg to border border-gray-100">
-                        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Complete Your Booking</h2>
+                  <div className="w-full xl:w-96">
+                     <div className="bg-gray-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-gray-700/50 sticky top-8">
+                        <h2 className="text-2xl md:text-3xl font-black text-white mb-2 text-center bg-gradient-to-r from-white to-gray-300 bg-clip-text ">
+                           Complete Booking
+                        </h2>
+                        <p className="text-gray-400 text-center mb-8">Secure your spot now</p>
 
                         <div className="space-y-6">
                            {/* Guest Counter */}
-                           <div className="bg-gray-50 p-4 rounded-xl">
-                              <label className="block text-sm font-medium text-gray-700 mb-3">Number of Guests</label>
+                           <div className="bg-gray-700/50 p-6 rounded-2xl border border-gray-600/50">
+                              <label className="block text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                                 <Users className="w-5 h-5 text-purple-400" />
+                                 Number of Guests
+                              </label>
                               <div className="flex items-center justify-between">
                                  <button
                                     onClick={decrementGuest}
                                     disabled={guestCount <= 1}
-                                    className="w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center text-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors shadow-sm"
+                                    className="w-12 h-12 rounded-2xl bg-gray-600 border border-gray-500 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-500 transition-all duration-300 shadow-lg transform hover:scale-105 active:scale-95"
                                  >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4" />
-                                    </svg>
+                                    <Minus className="w-5 h-5" />
                                  </button>
 
-                                 <span className="text-2xl font-bold text-gray-800 px-4 py-2 bg-white rounded-lg border border-gray-200 min-w-[60px] text-center">
-                                    {guestCount}
-                                 </span>
+                                 <div className="text-center">
+                                    <span className="text-4xl font-black text-white block">{guestCount}</span>
+                                    <span className="text-sm text-gray-400">Guests</span>
+                                 </div>
 
                                  <button
                                     onClick={incrementGuest}
                                     disabled={guestCount >= tourData!.maxGuest}
-                                    className="w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center text-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100 transition-colors shadow-sm"
+                                    className="w-12 h-12 rounded-2xl bg-gray-600 border border-gray-500 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-500 transition-all duration-300 shadow-lg transform hover:scale-105 active:scale-95"
                                  >
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                    </svg>
+                                    <Plus className="w-5 h-5" />
                                  </button>
                               </div>
-                              <p className="text-xs text-gray-500 text-center mt-3">Maximum {tourData?.maxGuest} guests</p>
+                              <p className="text-sm text-gray-400 text-center mt-3">
+                                 Maximum {tourData?.maxGuest} guests allowed
+                              </p>
                            </div>
 
                            {/* Price Breakdown */}
-                           <div className="bg-blue-50 p-5 rounded-xl">
-                              <h3 className="font-semibold text-gray-700 mb-4">Price Summary</h3>
+                           <div className="bg-gradient-to-br from-blue-500/20 to-purple-600/20 p-6 rounded-2xl border border-blue-500/30">
+                              <h3 className="font-bold text-white text-lg mb-4 flex items-center gap-2">
+                                 <Star className="w-5 h-5 text-yellow-400" />
+                                 Price Summary
+                              </h3>
 
-                              <div className="space-y-3">
+                              <div className="space-y-4">
                                  <div className="flex justify-between items-center">
-                                    <span className="text-gray-600">Price per person</span>
-                                    <span className="font-medium">${tourData?.costFrom}</span>
+                                    <span className="text-gray-300">Price per person</span>
+                                    <span className="font-semibold text-white">${tourData?.costFrom}</span>
                                  </div>
 
                                  <div className="flex justify-between items-center">
-                                    <span className="text-gray-600">Number of guests</span>
-                                    <span className="font-medium">{guestCount}</span>
+                                    <span className="text-gray-300">Number of guests</span>
+                                    <span className="font-semibold text-white">{guestCount}</span>
                                  </div>
 
-                                 <div className="border-t border-gray-200 pt-3 mt-1">
+                                 <div className="border-t border-blue-400/30 pt-4 mt-2">
                                     <div className="flex justify-between items-center">
-                                       <span className="text-lg font-semibold text-gray-800">Total Amount</span>
-                                       <span className="text-2xl font-bold text-blue-600">${totalAmount}</span>
+                                       <span className="text-xl font-bold text-white">Total Amount</span>
+                                       <span className="text-3xl font-black bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                                          ${totalAmount}
+                                       </span>
                                     </div>
                                  </div>
                               </div>
@@ -272,23 +267,42 @@ export default function BookingPage() {
                            {/* Book Button */}
                            <Button
                               onClick={handleBooking}
-                              className="w-full py-3 text-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
-                              size="lg"
+                              className="w-full py-6 text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 relative overflow-hidden group"
                            >
-                              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                              </svg>
-                              Confirm Booking
+                              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                              <div className="flex items-center justify-center gap-3 relative z-10">
+                                 <Lock className="w-5 h-5" />
+                                 Confirm & Pay Now
+                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                              </div>
                            </Button>
 
                            {/* Security Note */}
-                           <div className="text-center">
-                              <p className="text-xs text-gray-500 flex items-center justify-center">
-                                 <svg className="w-4 h-4 mr-1 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                 </svg>
-                                 Secure payment · Free cancellation within 24 hours
+                           <div className="text-center space-y-3">
+                              <div className="flex items-center justify-center gap-2 text-green-400">
+                                 <Shield className="w-4 h-4" />
+                                 <p className="text-sm font-medium">SSL Secure Payment</p>
+                              </div>
+                              <p className="text-xs text-gray-400">
+                                 🔒 Your payment is securely encrypted ·
+                                 <span className="text-green-400 ml-1">Free cancellation within 24 hours</span>
                               </p>
+                           </div>
+
+                           {/* Features */}
+                           <div className="grid grid-cols-2 gap-3 pt-4 border-t border-gray-700/50">
+                              <div className="text-center p-3 bg-gray-700/30 rounded-xl">
+                                 <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                    <Check className="w-4 h-4 text-green-400" />
+                                 </div>
+                                 <p className="text-xs text-gray-300">Instant Confirmation</p>
+                              </div>
+                              <div className="text-center p-3 bg-gray-700/30 rounded-xl">
+                                 <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                    <Calendar className="w-4 h-4 text-blue-400" />
+                                 </div>
+                                 <p className="text-xs text-gray-300">Flexible Dates</p>
+                              </div>
                            </div>
                         </div>
                      </div>
@@ -299,7 +313,6 @@ export default function BookingPage() {
       </div>
    );
 }
-
 
 //    _id: "1",
 //    title: "Magical Santorini Island Adventure",
